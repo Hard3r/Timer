@@ -19,6 +19,8 @@ class GameScreen: SKScene {
     var olddelta:CGFloat? = 0;
     
     
+    var oldpos: CGFloat!
+    
     override init() {
         super.init()
     }
@@ -44,17 +46,19 @@ class GameScreen: SKScene {
             print(lel)
         }
         
+        backgroundColor = SKColor.whiteColor()
         
         let background2 = SKSpriteNode(imageNamed: "dota2walpapaer");
         background2.position = CGPointMake(0, 0)
         background2.zPosition = 0;
-        background2.anchorPoint = CGPointMake(0, 0)
-        background2.setScale(0.8)
+        background2.anchorPoint = CGPointMake(0, 0.5)
+        //background2.setScale(0.8)
         self.addChild(background2);
         
         cam = SKCameraNode();
         self.camera = cam
-        cam.position = CGPointMake(self.frame.midX, self.frame.midY)
+        //cam.position = CGPointMake(self.frame.midX, self.frame.midY)
+        cam.position = CGPointMake(0, self.frame.height - cam.frame.height)
         
         
     }
@@ -70,10 +74,12 @@ class GameScreen: SKScene {
     
     override func update(currentTime: NSTimeInterval) {
         
+        
         while (olddelta != delta) {
-            if cam.position.y > 500 {
+            if (cam.position.y - delta!) >= 500 {
+                
                 cam.position.y = 500
-            } else if cam.position.y < -100 {
+            } else if (cam.position.y - delta!) <= -100 {
                 cam.position.y = -100
                 } else {
                 cam.position.y += -delta! }
