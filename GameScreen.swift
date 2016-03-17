@@ -129,7 +129,7 @@ class GameScreen: SKScene {
         //let shit = tests.childNodeWithName("BLABLA")
         //let mySprite:SKSpriteNode = tests.childNodeWithName("Aghanim2") as! SKSpriteNode
      
-        let testero = Hero(texture: nil, color: UIColor.whiteColor(), size: CGSizeMake(self.frame.width * 0.98, icon.frame.height), iconID: "Tidehunter")
+        let testero = Hero(texture: nil, color: UIColor.whiteColor(), size: CGSizeMake(self.frame.width * 0.98, icon.frame.height), iconID: "Tidehunter", aghanim: true)
         testero.position = CGPointMake((self.frame.width - testero.frame.width) / 2, self.frame.midY)
         self.addChild(testero)
         
