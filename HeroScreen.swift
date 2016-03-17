@@ -34,7 +34,7 @@ class HeroScreen: SKScene {
         self.addChild(background2);
         
         
-        mainframe = SKSpriteNode(color: UIColor.whiteColor(), size: CGSizeMake(self.frame.width * 0.48, self.frame.height * 0.8))
+        mainframe = SKSpriteNode(color: UIColor.whiteColor(), size: CGSizeMake(self.frame.width * 0.45, self.frame.height * 0.8))
         mainframe.position = CGPointMake(self.frame.midX, self.frame.midY * 0.9) //задаем позицию.
         //mainframe.alpha = 0.1
         
@@ -94,7 +94,7 @@ class HeroScreen: SKScene {
             } else if startbut.containsPoint(start){
                 
                 let transition:SKTransition = SKTransition.fadeWithDuration(1)
-                let scene:SKScene = GameScreen(size: self.size, set: touched)
+                let scene:SKScene = GameScreen(size: CGSizeMake(1080, 1920), set: touched)
                 scene.scaleMode = .AspectFill
                 self.view?.presentScene(scene, transition: transition)
                 
