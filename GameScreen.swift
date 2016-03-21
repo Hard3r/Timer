@@ -19,12 +19,13 @@ class GameScreen: SKScene {
     var olddelta:CGFloat? = 0;
     var RoundedRect:SKSpriteNode!
     var counts: Int = 1;
-    var counte: Int = 0;
+    var counte: Int = 60;
     var count: SKLabelNode!
     var tests: SKSpriteNode!
     
     
     var testero: Hero!
+    var Heroes: Set<Hero> = []
     var node: Hero!
     var node2: SKNode!
 
@@ -85,7 +86,6 @@ class GameScreen: SKScene {
         RoundedRect.zPosition = 10;
         self.addChild(RoundedRect) // добавляем наш объект на нашу сцену.
         
-        //size = RoundedRect.size
         
         icon.position = CGPointMake(0, 0)
         icon.anchorPoint = CGPointMake(0, 0)
@@ -121,29 +121,20 @@ class GameScreen: SKScene {
         reset.anchorPoint = CGPointMake(0, 0)
         RoundedRect.addChild(reset)
         
-        print(cam.frame.width)
-        print(cam.frame.height)
-       //tests = newshit(self)
-        //self.addChild(tests)
-        
-        //let shit = tests.childNodeWithName("BLABLA")
-        //let mySprite:SKSpriteNode = tests.childNodeWithName("Aghanim2") as! SKSpriteNode
-     
+    
         var heroes = ["Tidehunter", "Enigma"]
         
         for var index = 0; index < 2; index++ {
             let testim = Hero(texture: nil, color: UIColor.whiteColor(), size: CGSizeMake(self.frame.width * 0.98, icon.frame.height * 2), iconID: heroes[index], aghanim: true)
             testim.position = CGPointMake((self.frame.width - testim.frame.width) / 2, self.frame.midY - (testim.frame.height + 20) * CGFloat(index))
             testim.name = heroes[index]
+            
+            Heroes.insert(testim)
             self.addChild(testim)
         }
         
-        //testero = Hero(texture: nil, color: UIColor.whiteColor(), size: CGSizeMake(self.frame.width * 0.98, icon.frame.height * 2), iconID: "Tidehunter", aghanim: true)
-        //testero.position = CGPointMake((self.frame.width - testero.frame.width) / 2, self.frame.midY)
-        //self.addChild(testero)
-        
-        
     }
+    
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         for touch: AnyObject in touches {
@@ -159,17 +150,29 @@ class GameScreen: SKScene {
         for touch: AnyObject in touches {
             let location = touch.locationInNode(self)
             let nodee = self.nodeAtPoint(location)//.parent! as! Hero
-           // print("boom \(node.parent?.name!)")
-            node = self.childNodeWithName((nodee.parent?.name)!) as! Hero
-            print(node.name!)
-            let locinnode = touch.locationInNode(node)
-            node2 = node.nodeAtPoint(locinnode)
-            print(node.name!, node2.name!)
             
-            //touchnode = node
             
-            //print(touchnode.name)
+            for hero in Heroes {
+                //if hero.name == node.name {
+                if hero.name == nodee.parent?.name! {
+
+                   // if node2.name == "Start" {
+                    if nodee.name == "Start" {
+
+                        hero.timer.invalidate()
+                        hero.testtimer()
+                        hero.isStarted = true
+                        
+                    } else if nodee.name == "Reset" {
+                        hero.timer.invalidate()
+                        hero.seconds = 0
+                        hero.isStarted = false
+                        hero.label.text = "0"
+                    }
+                }
+            }
             
+           
             let locationbuttons = touch.locationInNode(RoundedRect)
 
             if start.containsPoint(locationbuttons) {
@@ -185,36 +188,13 @@ class GameScreen: SKScene {
         
     }
     
+    
     override func update(currentTime: NSTimeInterval) {
         
-       count.text = "\(counts)"
-     //   let mySprite:SKLabelNode = tests.childNodeWithName("BLABLA") as! SKLabelNode
-//mySprite.text = "\(lel)"
-    
-        
-        
-        if node != nil && node2.name == "Start" {
-            node.isStarted = true
-        }
-        
-        if node != nil {
-            if node.isStarted {
-                node.seconds += 1
-                node.label.text = "\(node.seconds)"
+            for hero in Heroes {
+                hero.update(currentTime)
             }
-        }
-        
-        
-        //при нажатии переключается другой нод а второй замораживается
-        //нужно добавить всех героев в сет и по нажатию выбирать нужный и дальше обрабатывать
-        
-        
-        if started {
-            counts += Int(currentTime)
-            node.label.text = "\(counts)"
-        } else { counts = 0 }
-        
-        
+   
         
         while (olddelta != delta) {
             if (cam.position.y - delta!) >= self.frame.midY {

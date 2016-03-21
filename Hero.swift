@@ -11,7 +11,7 @@ import SpriteKit
 
 class Hero: SKSpriteNode {
     
-    var seconds: Int = 0
+    var seconds: Int = 1
     
     //Hero name
     var iconID: String!
@@ -43,6 +43,10 @@ class Hero: SKSpriteNode {
     var reset: SKSpriteNode!
     var skill: SKSpriteNode!
     
+    var timer = NSTimer()
+    
+    
+    
     init() {
     super.init(texture: nil, color: UIColor.clearColor(), size: CGSizeMake(0, 0))
     }
@@ -53,6 +57,7 @@ class Hero: SKSpriteNode {
         self.aghanim = aghanim
         self.anchorPoint = CGPointMake(0, 0)
         initchilds()
+        
     }
     
     
@@ -160,6 +165,25 @@ class Hero: SKSpriteNode {
         level16.name = "Level16"
         self.addChild(level16)
 
+    }
+   
+    
+    
+    func update(nstime: NSTimeInterval) {
+      
+        
+    }
+    
+    //Add a timer
+    func testtimer() {
+        timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "countdown", userInfo: nil, repeats: true)
+
+    }
+    
+    //Selector for timer
+    func countdown() {
+        label.text = "\(seconds++)"
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
