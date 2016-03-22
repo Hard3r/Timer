@@ -33,15 +33,13 @@ class HeroScreen: SKScene {
         //background2.xScale = 1.1
         self.addChild(background2);
         
-        
+        //Фрейм содержащий 3 кнопки
         mainframe = SKSpriteNode(color: UIColor.whiteColor(), size: CGSizeMake(self.frame.width * 0.45, self.frame.height * 0.8))
         mainframe.position = CGPointMake(self.frame.midX, self.frame.midY * 0.9) //задаем позицию.
-        //mainframe.alpha = 0.1
-        
         mainframe.zPosition = 2 // задаем  положение нашего объекта относительно оси Z.
         self.addChild(mainframe)
         
-        
+        //Start button
         startbut = SKSpriteNode(imageNamed: "startbutt")
         startbut.position = CGPointMake(mainframe.frame.maxX - startbut.frame.width, mainframe.frame.maxY + startbut.frame.size.height / 2)
          startbut.anchorPoint = CGPointMake(0, 0.5)
@@ -51,7 +49,7 @@ class HeroScreen: SKScene {
         //расчет размера нодов в соответствии с количеством колонок и строк
         squareSize = CGSizeMake(mainframe.frame.size.width / CGFloat(numcols), mainframe.frame.size.height / CGFloat(numrows))
 
-        
+        //Loop to create field of nodes whith static size
         for row in 0...numrows-1 {
             for col in 0...numcols-1 {
                 let node = heroicon(icons.names[count])

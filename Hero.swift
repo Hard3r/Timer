@@ -13,29 +13,42 @@ class Hero: SKSpriteNode {
     
     var seconds: Int = 1
     
-    var lvl6: Int!
-    var lvl11: Int!
-    var lvl16: Int!
+    //Levels check
+    var lvl6: Int = 0;
+    var lvl6pressed: Bool = true;
+    var lvl11: Int = 0;
+    var lvl11pressed: Bool = false;
+    var lvl16: Int = 0;
+    var lvl16pressed: Bool = false;
+
     
-    var lvl6agha: Int!
-    var lvl11agha: Int!
-    var lvl16agha: Int!
+    var lvl6agha: Int = 0
+    var lvl6aghapressed: Bool = false;
+    var lvl11agha: Int = 0
+    var lvl11aghapressed: Bool = false;
+    var lvl16agha: Int = 0;
+    var lvl16aghapressed: Bool = false;
     
     
     //Hero name
     var iconID: String!
     
     //Levels
-    var ulti6: Int!
-    var ulti11: Int!
-    var ulti16: Int!
+    var ulti6: Int = 0;
+    var ulti11: Int = 0;
+    var ulti16: Int = 0;
+    var aulti6: Int = 0;
+    var aulti11: Int = 0;
+    var aulti16: Int = 0;
     
-    var isStarted: Bool = false
     
+    var isStarted: Bool = true
     
-    
-    //Check for aghanim and octarine
+    //Check for aghanim
     var aghanim: Bool = false
+    
+    //Check for buttons press
+    var aghanimpressed: Bool = false
     var octarine: Bool = false
     
     //Main sprites
@@ -74,7 +87,13 @@ class Hero: SKSpriteNode {
             self.lvl6agha = hero.lvl6agha;
             self.lvl11agha = hero.lvl11agha;
             self.lvl16agha = hero.lvl16agha;
-        self.anchorPoint = CGPointMake(0, 0)
+            self.ulti6 = hero.lvl6cool;
+            self.ulti11 = hero.lvl11cool;
+            self.ulti16 = hero.lvl16cool;
+            self.aulti6 = hero.lvl6agha;
+            self.aulti11 = hero.lvl11agha;
+            self.aulti16 = hero.lvl16agha;
+            self.anchorPoint = CGPointMake(0, 0)
         initchilds()
     }
     
@@ -94,10 +113,11 @@ class Hero: SKSpriteNode {
         labelframe = SKSpriteNode(color: UIColor.blackColor(), size: CGSizeMake((self.frame.width - icon.frame.width) / 7, icon.frame.height))
         labelframe.anchorPoint = CGPointMake(0, 0)
         labelframe.position = CGPointMake(icon.position.x + icon.frame.width, icon.frame.height)
+        labelframe.name = "Labelframe";
         self.addChild(labelframe)
-        label = SKLabelNode(text: "\(0)")
+        label = SKLabelNode(text: "\(lvl6)")
         label.name = "Timer"
-        label.fontSize = 100
+        label.fontSize = 50
         label.position = CGPointMake(labelframe.frame.width / 2, labelframe.frame.height / 2 - label.frame.height / 2)
         labelframe.addChild(label)
         
@@ -188,8 +208,21 @@ class Hero: SKSpriteNode {
     
     
     func update(nstime: NSTimeInterval) {
-      
-        
+    
+        if isStarted {
+            if lvl6pressed && !aghanimpressed{
+                label.text = "\(ulti6)"
+            } else if lvl6pressed && aghanimpressed {
+                label.text = "\(aulti6)"
+            } else if lvl11pressed && !aghanimpressed {
+                label.text = "\(ulti11)"
+            } else if lvl11pressed && aghanimpressed {
+                label.text = "\(aulti11)"
+            } else if lvl16pressed && !aghanimpressed {
+                label.text = "\(ulti16)"
+            } else if lvl16pressed && aghanimpressed {
+                label.text = "\(aulti16)"
+            }        }
     }
     
     //Add a timer
@@ -200,8 +233,21 @@ class Hero: SKSpriteNode {
     
     //Selector for timer
     func countdown() {
-        label.text = "\(seconds++)"
         
+        //Докинуть октарин поверх присвоения текста
+        if lvl6pressed && !aghanimpressed{
+            label.text = "\(lvl6--)"
+        } else if lvl6pressed && aghanimpressed {
+            label.text = "\(lvl6agha--)"
+        } else if lvl11pressed && !aghanimpressed {
+            label.text = "\(lvl11--)"
+        } else if lvl11pressed && aghanimpressed {
+            label.text = "\(lvl11agha--)"
+        } else if lvl16pressed && !aghanimpressed {
+            label.text = "\(lvl16--)"
+        } else if lvl16pressed && aghanimpressed {
+            label.text = "\(lvl16agha--)"
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {

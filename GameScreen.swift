@@ -14,17 +14,17 @@ class GameScreen: SKScene {
     var label: SKLabelNode!
     var selectedheroes: Set<String>!
     var cam: SKCameraNode = SKCameraNode()
-    var test:CGFloat = 0;
+    //var test:CGFloat = 0;
     var delta:CGFloat? = 0;
     var olddelta:CGFloat? = 0;
     var RoundedRect:SKSpriteNode!
     var counts: Int = 1;
     var counte: Int = 60;
     var count: SKLabelNode!
-    var tests: SKSpriteNode!
+    //var tests: SKSpriteNode!
     
     
-    var testero: Hero!
+    //var testero: Hero!
     var Heroes: Set<Hero> = []
     var HeroDB = SimpleDB();
     var node: Hero!
@@ -39,13 +39,14 @@ class GameScreen: SKScene {
     
     var oldpos: CGFloat!
     
-    var sizee: CGSize!
+    //var sizee: CGSize!
     
+    //Defauls init from superclass
     override init() {
         super.init()
     }
     
-    
+    //Init with size and set of selected heroes Set<String>
     init(size: CGSize, set: Set<String>) {
         super.init(size: size)
         self.selectedheroes = set;
@@ -67,7 +68,9 @@ class GameScreen: SKScene {
         }
         
         backgroundColor = SKColor.grayColor()
-    
+        self.name = "Main"
+
+        //Add camera
         self.camera = cam
         cam.position = CGPointMake(self.frame.width / 2, self.frame.height / 2)
         
@@ -115,9 +118,9 @@ class GameScreen: SKScene {
         reset.anchorPoint = CGPointMake(0, 0)
         RoundedRect.addChild(reset)
         
-        
+        //Create hero nodes using set from previos scene and SimpleDB
+        //2x loop. 1 iterating by Set<String>, second iterating SimpleDB.HeroSet<Character>
         var herocount: Int = 0;
-        
         for heros in selectedheroes {
             for herosDB in HeroDB.HeroSet {
                 if heros == herosDB.name {
@@ -138,6 +141,9 @@ class GameScreen: SKScene {
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         for touch: AnyObject in touches {
+            
+            //Check touch location and previos touch location
+            //Calculating delta to scroll camera
             let start = touch.locationInNode(self)
             let previousLocation = touch.previousLocationInNode(self)
             delta = start.y - previousLocation.y
@@ -150,25 +156,91 @@ class GameScreen: SKScene {
             
             let location = touch.locationInNode(self)
             let nodee = self.nodeAtPoint(location)//.parent! as! Hero
+            let name: String = nodee.name!;
+            print(nodee.name!)
             
-            
+            //iterate hero nodes on scene
+            //check name of pressed node equal it to set of existing nodes
             for hero in Heroes {
                 //if hero.name == node.name {
                 if hero.name == nodee.parent?.name! {
                     
-                    // if node2.name == "Start" {
-                    if nodee.name == "Start" {
+                    switch(name) {
+                        case "Start":
+                            //Stop timer
+                            hero.timer.invalidate()
+                            
+                            //Start timer
+                            hero.testtimer()
+                            
+                            //Stop updating
+                            hero.isStarted = false
+                            
+                            //Change scale to make pressed button effect
+                            hero.start.setScale(0.9)
+                        case "Reset":
+                            
+                            //Stop timer
+                            hero.timer.invalidate()
+                            
+                            //Start updating and check what to update
+                            hero.isStarted = true
+                            if hero.lvl6pressed && !hero.aghanimpressed{
+                                hero.lvl6 = hero.ulti6
+                            } else if hero.lvl6pressed && hero.aghanimpressed {
+                                hero.lvl6agha = hero.aulti6
+                            } else if hero.lvl11pressed && !hero.aghanimpressed {
+                                hero.lvl11 = hero.ulti11
+                            } else if hero.lvl11pressed && hero.aghanimpressed {
+                                hero.lvl11agha = hero.aulti11
+                            } else if hero.lvl16pressed && !hero.aghanimpressed {
+                                hero.lvl16 = hero.ulti16
+                            } else if hero.lvl16pressed && hero.aghanimpressed {
+                                hero.lvl16agha = hero.aulti16
+                            }
                         
-                        hero.timer.invalidate()
-                        hero.testtimer()
-                        hero.isStarted = true
+                        case "Aghanim":
+                            hero.aghanimpressed = !hero.aghanimpressed
+                            if hero.scepter.alpha == 0.5 {
+                                hero.scepter.alpha = 1;
+                            } else { hero.scepter.alpha = 0.5; }
                         
-                    } else if nodee.name == "Reset" {
-                        hero.timer.invalidate()
-                        hero.seconds = 0
-                        hero.isStarted = false
-                        hero.label.text = "0"
+                        case "Octarine":
+                            hero.octarine = !hero.octarine
+                            if hero.core.alpha == 0.5 {
+                                hero.core.alpha = 1;
+                            } else { hero.core.alpha = 0.5; }
+                        
+                        case "Level6":
+                            hero.lvl6pressed = true;
+                            hero.lvl11pressed = false;
+                            hero.lvl16pressed = false;
+                            hero.level6.alpha = 0.5
+                            hero.level11.alpha = 1
+                            hero.level16.alpha = 1
+
+                        case "Level11":
+                            hero.lvl6pressed = false;
+                            hero.lvl11pressed = true;
+                            hero.lvl16pressed = false;
+                            hero.level6.alpha = 1
+                            hero.level11.alpha = 0.5
+                            hero.level16.alpha = 1
+                        
+                        
+                        case "Level16":
+                            hero.lvl6pressed = false;
+                            hero.lvl11pressed = false;
+                            hero.lvl16pressed = true;
+                            hero.level6.alpha = 1
+                            hero.level11.alpha = 1
+                            hero.level16.alpha = 0.5
+                        
+                        
+                    default:
+                        print("Try again")
                     }
+                    
                 }
             }
 
@@ -178,9 +250,26 @@ class GameScreen: SKScene {
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         for touch: AnyObject in touches {
             
-           
+            let location = touch.locationInNode(self)
+            let nodee = self.nodeAtPoint(location)//.parent! as! Hero
+            let name: String = nodee.name!;
             let locationbuttons = touch.locationInNode(RoundedRect)
 
+            
+            //Bring scale of start button to normal size
+            for hero in Heroes {
+                //if hero.name == node.name {
+                if hero.name == nodee.parent?.name! {
+        
+            switch(name) {
+            case "Start":
+                hero.start.setScale(1);
+            
+            default:
+                print("Try again")
+            }
+        }
+    }
             if start.containsPoint(locationbuttons) {
                 print("tapped! + Start")
                 started = true
@@ -200,7 +289,7 @@ class GameScreen: SKScene {
                 hero.update(currentTime)
             }
    
-        
+        //Update camera (scroll)
         while (olddelta != delta) {
             if (cam.position.y - delta!) >= self.frame.midY {
                 

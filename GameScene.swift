@@ -32,12 +32,6 @@ class GameScene: SKScene {
         //background2.xScale = 1.1
         self.addChild(background2);
         
-        /*
-        let background = SKSpriteNode(imageNamed: "dotalogo");
-        background.position = CGPointMake(self.frame.midX, self.frame.height - (background.frame.height) * 0.5)
-        //background.anchorPoint = CGPointMake(0, 0)
-        self.addChild(background);
-*/
         
         //Parent frame for buttons
         mainbutt = SKSpriteNode(imageNamed: "buttonframe")
