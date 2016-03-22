@@ -26,6 +26,7 @@ class GameScreen: SKScene {
     
     var testero: Hero!
     var Heroes: Set<Hero> = []
+    var HeroDB = SimpleDB();
     var node: Hero!
     var node2: SKNode!
 
@@ -68,13 +69,7 @@ class GameScreen: SKScene {
         backgroundColor = SKColor.grayColor()
     
         self.camera = cam
-        //cam.setScale(10)
-        //cam.xScale = 2
-        //cam.yScale = 2
         cam.position = CGPointMake(self.frame.width / 2, self.frame.height / 2)
-        
-        //self.frame.maxY - cam.frame.height , self.frame.height - cam.frame.height
-        //cam.position = CGPointMake(self.frame.midX - self.frame.width / 4, self.frame.midY)
         
         
         let icon = SKSpriteNode(imageNamed: "Tidehunter")
@@ -89,7 +84,6 @@ class GameScreen: SKScene {
         
         icon.position = CGPointMake(0, 0)
         icon.anchorPoint = CGPointMake(0, 0)
-        //icon.setScale(0.95)
         icon.zPosition = 4;
         RoundedRect.addChild(icon)
         
@@ -121,33 +115,39 @@ class GameScreen: SKScene {
         reset.anchorPoint = CGPointMake(0, 0)
         RoundedRect.addChild(reset)
         
-    
-        var heroes = ["Tidehunter", "Enigma"]
         
-        for var index = 0; index < 2; index++ {
-            let testim = Hero(texture: nil, color: UIColor.whiteColor(), size: CGSizeMake(self.frame.width * 0.98, icon.frame.height * 2), iconID: heroes[index], aghanim: true)
-            testim.position = CGPointMake((self.frame.width - testim.frame.width) / 2, self.frame.midY - (testim.frame.height + 20) * CGFloat(index))
-            testim.name = heroes[index]
-            
-            Heroes.insert(testim)
-            self.addChild(testim)
+        var herocount: Int = 0;
+        
+        for heros in selectedheroes {
+            for herosDB in HeroDB.HeroSet {
+                if heros == herosDB.name {
+                    let character = Hero(texture: nil, color: UIColor.whiteColor(),
+                        size: CGSizeMake(self.frame.width * 0.98, icon.frame.height * 2),
+                        hero: herosDB);
+                    
+                    character.position = CGPointMake((self.frame.width - character.frame.width) / 2, self.frame.midY - (character.frame.height + 20) * CGFloat(herocount));
+                    character.name = herosDB.name;
+                    Heroes.insert(character);
+                    self.addChild(character);
+                }
+                herocount++
+            }
         }
         
     }
-    
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         for touch: AnyObject in touches {
             let start = touch.locationInNode(self)
             let previousLocation = touch.previousLocationInNode(self)
-            //let deltaY = start.y - previousLocation.y
             delta = start.y - previousLocation.y
             print("\(start.x)", "\(start.y)")
         }
     }
     
-    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         for touch: AnyObject in touches {
+            
             let location = touch.locationInNode(self)
             let nodee = self.nodeAtPoint(location)//.parent! as! Hero
             
@@ -155,10 +155,10 @@ class GameScreen: SKScene {
             for hero in Heroes {
                 //if hero.name == node.name {
                 if hero.name == nodee.parent?.name! {
-
-                   // if node2.name == "Start" {
+                    
+                    // if node2.name == "Start" {
                     if nodee.name == "Start" {
-
+                        
                         hero.timer.invalidate()
                         hero.testtimer()
                         hero.isStarted = true
@@ -171,6 +171,12 @@ class GameScreen: SKScene {
                     }
                 }
             }
+
+        }
+    }
+    
+    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        for touch: AnyObject in touches {
             
            
             let locationbuttons = touch.locationInNode(RoundedRect)
@@ -184,7 +190,6 @@ class GameScreen: SKScene {
                 started = false
             }
         }
-        
         
     }
     

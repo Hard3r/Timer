@@ -13,6 +13,15 @@ class Hero: SKSpriteNode {
     
     var seconds: Int = 1
     
+    var lvl6: Int!
+    var lvl11: Int!
+    var lvl16: Int!
+    
+    var lvl6agha: Int!
+    var lvl11agha: Int!
+    var lvl16agha: Int!
+    
+    
     //Hero name
     var iconID: String!
     
@@ -26,8 +35,8 @@ class Hero: SKSpriteNode {
     
     
     //Check for aghanim and octarine
-    var aghanim: Bool = true
-    var octarine: Bool!
+    var aghanim: Bool = false
+    var octarine: Bool = false
     
     //Main sprites
     var icon: SKSpriteNode!
@@ -51,13 +60,22 @@ class Hero: SKSpriteNode {
     super.init(texture: nil, color: UIColor.clearColor(), size: CGSizeMake(0, 0))
     }
     
-    init(texture: SKTexture?, color: UIColor, size: CGSize, iconID: String, aghanim: Bool) {
+    //iconID: String, aghanim: Bool,
+    //level6cool: Int, level11cool: Int, level16cool: Int, level6agha: Int, level11agha: Int, level16agha: Int
+    
+    
+    init(texture: SKTexture?, color: UIColor, size: CGSize, hero: Character) {
        super.init(texture: texture, color: color, size: size)
-        self.iconID = iconID;
-        self.aghanim = aghanim
+            self.iconID = hero.name;
+            self.aghanim = hero.aghanim;
+            self.lvl6 = hero.lvl6cool;
+            self.lvl11 = hero.lvl11cool;
+            self.lvl16 = hero.lvl16cool;
+            self.lvl6agha = hero.lvl6agha;
+            self.lvl11agha = hero.lvl11agha;
+            self.lvl16agha = hero.lvl16agha;
         self.anchorPoint = CGPointMake(0, 0)
         initchilds()
-        
     }
     
     
