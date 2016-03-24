@@ -396,6 +396,25 @@ class Hero: SKSpriteNode {
         }
 
     }
+    
+    
+    func resetTimer() {
+        //Stop timer
+        timer.invalidate();
+        
+        //Reset readyspell sprite
+        readyspell.alpha = 0;
+        
+        //Start updating and check what to update
+        isStarted = true;
+        
+        //Reset cooldowns
+        resetcooldowns();
+        
+        //Reset cooldown controller
+        soundTEN = true;
+        soundZERO = true;
+    }
 
     //Test func to play sound when timer reach 10 sec
     func soundTEN(soundname: String) {

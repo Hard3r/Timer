@@ -18,6 +18,7 @@ class GameScreen: SKScene {
     var delta:CGFloat? = 0;
     var xdelta: CGFloat = 0;
     var olddelta:CGFloat? = 0;
+    var oldxdelta:CGFloat? = 0;
     var RoundedRect:SKSpriteNode!
     var counts: Int = 1;
     var counte: Int = 60;
@@ -40,7 +41,6 @@ class GameScreen: SKScene {
     
     var oldpos: CGFloat!;
     
-    var nodeismoving: Bool = true;
     
     //var sizee: CGSize!
     
@@ -65,8 +65,8 @@ class GameScreen: SKScene {
         self.anchorPoint = CGPointMake(0, 0);
         
         var test: String = "";
-        for lel in selectedheroes {
-            test = test + " \n" + lel;
+        for lel in Heroes {
+            test = test + " \n" + lel.name!;
             print(lel);
         }
         
@@ -79,48 +79,14 @@ class GameScreen: SKScene {
         
         
         let icon = SKSpriteNode(imageNamed: "Tidehunter");
-        
+        /*
         RoundedRect = SKSpriteNode(color: UIColor.whiteColor(), size: CGSizeMake(self.frame.width * 0.98, icon.frame.height));
         RoundedRect.position = CGPointMake(self.frame.midX - RoundedRect.frame.width / 2, self.frame.maxY - RoundedRect.frame.height); // задаем позицию.
         RoundedRect.anchorPoint = CGPointMake(0, 0);
         RoundedRect.name = "RoundedRect"; // задаем имя.
         RoundedRect.zPosition = 10;
         self.addChild(RoundedRect); // добавляем наш объект на нашу сцену.
-        
-        
-        icon.position = CGPointMake(0, 0);
-        icon.anchorPoint = CGPointMake(0, 0);
-        icon.zPosition = 4;
-        RoundedRect.addChild(icon);
-        
-        timer = SKSpriteNode(color: UIColor.blackColor(), size: CGSizeMake(RoundedRect.frame.width / 2 - icon.frame.width, icon.frame.height / 2));
-        timer.anchorPoint = CGPointMake(0, 0);
-        timer.position = CGPointMake(icon.frame.width, icon.frame.height / 2);
-        RoundedRect.addChild(timer);
-        count = SKLabelNode(text: "\(counts)");
-        count.name = "bla";
-        count.position = CGPointMake(timer.frame.width / 2, timer.frame.height / 2);
-        timer.addChild(count);
-        
-        aghanim = SKSpriteNode(color: UIColor.redColor(), size: CGSizeMake(RoundedRect.frame.width / 2 - icon.frame.width, icon.frame.height / 2));
-        aghanim.anchorPoint = CGPointMake(0, 0);
-        aghanim.position = CGPointMake(icon.frame.width, 0);
-        aghanim.name = "Aghanim";
-        RoundedRect.addChild(aghanim);
-        
-        start = SKSpriteNode(imageNamed: "startbutt");
-        start.size = CGSizeMake(RoundedRect.frame.width / 4, RoundedRect.frame.height);
-        start.position = CGPointMake(icon.frame.width + aghanim.frame.width, 0);
-        start.anchorPoint = CGPointMake(0, 0);
-        start.name = "start";
-        RoundedRect.addChild(start);
-        
-        reset = SKSpriteNode(imageNamed: "info");
-        reset.size = CGSizeMake(RoundedRect.frame.width / 4, RoundedRect.frame.height);
-        reset.position = CGPointMake(icon.frame.width + aghanim.frame.width + start.frame.width, 0);
-        reset.anchorPoint = CGPointMake(0, 0);
-        RoundedRect.addChild(reset);
-        
+        */
         //Create hero nodes using set from previos scene and SimpleDB
         //2x loop. 1 iterating by Set<String>, second iterating SimpleDB.HeroSet<Character>
         var herocount: Int = 0;
@@ -131,7 +97,7 @@ class GameScreen: SKScene {
                         size: CGSizeMake(self.frame.width * 0.98, icon.frame.height * 2),
                         hero: herosDB);
                     
-                    character.position = CGPointMake((self.frame.width - character.frame.width) / 2, self.frame.midY - (character.frame.height + 20) * CGFloat(herocount));
+                    character.position = CGPointMake((self.frame.width - character.frame.width) / 2, self.frame.maxY - (character.frame.height + 20) * CGFloat(herocount));
                     character.name = herosDB.name;
                     Heroes.insert(character);
                     self.addChild(character);
@@ -175,6 +141,7 @@ class GameScreen: SKScene {
                     
                     if hero.position.x > self.frame.midX {
                         hero.removeFromParent();
+                        Heroes.remove(hero);
                     }
                 }
             }
@@ -210,21 +177,8 @@ class GameScreen: SKScene {
                             hero.start.setScale(0.9);
                         case "Reset":
                             
-                            //Stop timer
-                            hero.timer.invalidate();
-                            
-                            //Reset readyspell sprite
-                            hero.readyspell.alpha = 0;
-                            
-                            //Start updating and check what to update
-                            hero.isStarted = true;
-                        
-                            //Reset cooldowns
-                            hero.resetcooldowns();
-                        
-                            //Reset cooldown controller
-                            hero.soundTEN = true;
-                            hero.soundZERO = true;
+                            //Reset timer
+                            hero.resetTimer();
                         
                         case "Aghanim":
                             hero.timer.invalidate();
@@ -252,29 +206,19 @@ class GameScreen: SKScene {
                             } else { hero.core.alpha = 0.5; }
                         
                         case "Level6":
-                            hero.timer.invalidate();
-
-                            //Start updating and check what to update
-                            hero.isStarted = true;
-                            
-                            //Reset cooldowns
-                            hero.resetcooldowns();
+                            //Reset timer
+                            hero.resetTimer();
                             
                             hero.lvl6pressed = true;
                             hero.lvl11pressed = false;
                             hero.lvl16pressed = false;
-                            hero.level6.alpha = 0.5
-                            hero.level11.alpha = 1
-                            hero.level16.alpha = 1
+                            hero.level6.alpha = 0.5;
+                            hero.level11.alpha = 1;
+                            hero.level16.alpha = 1;
 
                         case "Level11":
-                            hero.timer.invalidate();
-                            
-                            //Start updating and check what to update
-                            hero.isStarted = true;
-                            
-                            //Reset cooldowns
-                            hero.resetcooldowns();
+                            //Reset timer
+                            hero.resetTimer();
                             
                             hero.lvl6pressed = false;
                             hero.lvl11pressed = true;
@@ -282,16 +226,11 @@ class GameScreen: SKScene {
                             hero.level6.alpha = 1;
                             hero.level11.alpha = 0.5;
                             hero.level16.alpha = 1;
-                        
+
                         
                         case "Level16":
-                            hero.timer.invalidate();
-
-                            //Start updating and check what to update
-                            hero.isStarted = true;
-                            
-                            //Reset cooldowns
-                            hero.resetcooldowns();
+                            //Reset timer
+                            hero.resetTimer();
                             
                             hero.lvl6pressed = false;
                             hero.lvl11pressed = false;
@@ -299,7 +238,7 @@ class GameScreen: SKScene {
                             hero.level6.alpha = 1;
                             hero.level11.alpha = 1;
                             hero.level16.alpha = 0.5;
-                        
+
                         
                     default:
                         print("Try again")
@@ -317,7 +256,7 @@ class GameScreen: SKScene {
             let location = touch.locationInNode(self);
             let nodee = self.nodeAtPoint(location);
             let name: String = nodee.name!;
-            let locationbuttons = touch.locationInNode(RoundedRect)
+            //let locationbuttons = touch.locationInNode(RoundedRect)
 
             
             //Bring scale of start button to normal size
@@ -331,21 +270,10 @@ class GameScreen: SKScene {
             
             default:
                 print("Try again")
+                    }
+                }
             }
         }
-    }
-            
-            //Mojno delete
-            if start.containsPoint(locationbuttons) {
-                print("tapped! + Start");
-                started = true;
-                
-            } else if reset.containsPoint(locationbuttons) {
-                print("tapped! + Settings");
-                started = false;
-            }
-        }
-        
     }
     
     
@@ -354,14 +282,14 @@ class GameScreen: SKScene {
             for hero in Heroes {
                 hero.update(currentTime);
                 
-                if (xdelta != 0) && hero.position.x > (self.frame.width - hero.frame.width) / 2 {
-                    hero.position.x -= 5;
+                //Movement of node
+                if hero.position.x > (self.frame.width - hero.frame.width) / 2 {
+                        hero.position.x -= 5;
+                } else if hero.position.x - 5 <= (self.frame.width - hero.frame.width) / 2 {
+                        hero.position.x = (self.frame.width - hero.frame.width) / 2;
+                    }
                 }
-            }
-        
-        if nodeismoving {
-            
-        }
+       
    
         //Update camera (scroll)
         while (olddelta != delta) {
@@ -373,9 +301,11 @@ class GameScreen: SKScene {
                 } else {
                 cam.position.y += -delta!; }
             
-                olddelta = delta
-            }
+                    olddelta = delta;
+        }
     }
+    
 }
+
 
 
