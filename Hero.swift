@@ -48,9 +48,12 @@ class Hero: SKSpriteNode {
     var aghanim: Bool = false
     
     //Check for buttons press
-    var aghanimpressed: Bool = false
-    var octarine: Bool = false
-    var octarinepressed: Bool = false
+    var aghanimpressed: Bool = false;
+    var octarine: Bool = false;
+    var octarinepressed: Bool = false;
+    var soundTEN: Bool = true;
+    var soundZERO: Bool = true;
+    
     
     //Main sprites
     var icon: SKSpriteNode!
@@ -65,6 +68,7 @@ class Hero: SKSpriteNode {
     var start: SKSpriteNode!
     var reset: SKSpriteNode!
     var skill: SKSpriteNode!
+    var readyspell: SKSpriteNode!
     
     var timer = NSTimer()
     
@@ -205,16 +209,23 @@ class Hero: SKSpriteNode {
         level16.name = "Level16"
         self.addChild(level16)
 
+        
+        readyspell = SKSpriteNode(color: UIColor.blackColor(), size: CGSizeMake(80, 80));
+        readyspell.position = CGPointMake(skill.frame.midX, skill.frame.midY);
+        readyspell.name = "Ready";
+        readyspell.zPosition = 10;
+        readyspell.alpha = 0;
+        skill.addChild(readyspell);
     }
    
-    var dobl: Double = 12.2
+    var dobl: Double = 1
     
     
     func update(nstime: NSTimeInterval) {
     
+        //Cooldowns update
         switch(octarine) {
         case true:
-            
             if isStarted {
                 if lvl6pressed && !aghanimpressed{
                     label.text = "\(octarine(ulti6))"
@@ -232,21 +243,40 @@ class Hero: SKSpriteNode {
         case false:
             if isStarted {
                 if lvl6pressed && !aghanimpressed{
-                    label.text = "\(ulti6)"
+                    label.text = "\(Int(ulti6))"
                 } else if lvl6pressed && aghanimpressed {
-                    label.text = "\(aulti6)"
+                    label.text = "\(Int(aulti6))"
                 } else if lvl11pressed && !aghanimpressed {
-                    label.text = "\(ulti11)"
+                    label.text = "\(Int(ulti11))"
                 } else if lvl11pressed && aghanimpressed {
-                    label.text = "\(aulti11)"
+                    label.text = "\(Int(aulti11))"
                 } else if lvl16pressed && !aghanimpressed {
-                    label.text = "\(ulti16)"
+                    label.text = "\(Int(ulti16))"
                 } else if lvl16pressed && aghanimpressed {
-                    label.text = "\(aulti16)"
+                    label.text = "\(Int(aulti16))"
                 }        }
-        default:
-            print("eror octarine")
         }
+        
+       //Check cooldowns to end, whet timer reach 10 sec call method wih sound
+        if soundTEN {
+            if lvl6 < 2 || lvl6agha < 2 {
+                soundTEN("10 SECONDS");
+            } else if lvl11 < 2 || lvl11agha < 2 {
+                soundTEN("10 SECONDS");
+            } else if lvl16 < 2 || lvl16agha < 2 {
+                soundTEN("10 SECONDS");
+            }
+        } else if soundZERO {
+            if lvl6 < 0 || lvl6agha < 0 {
+                soundZERO("0 SECONDS");
+            } else if lvl11 < 0 || lvl11agha < 0 {
+                soundZERO("0 SECONDS");
+            } else if lvl16 < 0 || lvl16agha < 0 {
+                soundZERO("0 SECONDS");
+            }
+        }
+        
+        
         
         
     }
@@ -263,7 +293,6 @@ class Hero: SKSpriteNode {
 
         switch(octarine) {
         case true:
-            
             if lvl6pressed && !aghanimpressed{
                 label.text = "\(lvl6--)"
             } else if lvl6pressed && aghanimpressed {
@@ -278,23 +307,22 @@ class Hero: SKSpriteNode {
                 label.text = "\(lvl16agha--)"
             }
         case false:
-            
             if lvl6pressed && !aghanimpressed{
-                label.text = "\(lvl6--)"
+                label.text = "\(Int(lvl6--))"
             } else if lvl6pressed && aghanimpressed {
-                label.text = "\(lvl6agha--)"
+                label.text = "\(Int(lvl6agha--))"
             } else if lvl11pressed && !aghanimpressed {
-                label.text = "\(lvl11--)"
+                label.text = "\(Int(lvl11--))"
             } else if lvl11pressed && aghanimpressed {
-                label.text = "\(lvl11agha--)"
+                label.text = "\(Int(lvl11agha--))"
             } else if lvl16pressed && !aghanimpressed {
-                label.text = "\(lvl16--)"
+                label.text = "\(Int(lvl16--))"
             } else if lvl16pressed && aghanimpressed {
-                label.text = "\(lvl16agha--)"
+                label.text = "\(Int(lvl16agha--))"
             }
-        default:
-            print("eror octarine")
         }
+        
+    
 
     }
     
@@ -331,6 +359,56 @@ class Hero: SKSpriteNode {
         lvl16agha = aulti16;
         
     }
+    
+    func resetcooldowns() {
+        switch(octarinepressed) {
+        case true:
+            if lvl6pressed && !aghanimpressed{
+                lvl6 = ulti6 * 0.75
+            } else if lvl6pressed && aghanimpressed {
+                lvl6agha = aulti6 * 0.75
+            } else if lvl11pressed && !aghanimpressed {
+                lvl11 = ulti11 * 0.75
+            } else if lvl11pressed && aghanimpressed {
+                lvl11agha = aulti11 * 0.75
+            } else if lvl16pressed && !aghanimpressed {
+                lvl16 = ulti16 * 0.75
+            } else if lvl16pressed && aghanimpressed {
+                lvl16agha = aulti16 * 0.75
+            }
+        case false:
+            if lvl6pressed && !aghanimpressed{
+                lvl6 = ulti6
+            } else if lvl6pressed && aghanimpressed {
+                lvl6agha = aulti6
+            } else if lvl11pressed && !aghanimpressed {
+                lvl11 = ulti11
+            } else if lvl11pressed && aghanimpressed {
+                lvl11agha = aulti11
+            } else if lvl16pressed && !aghanimpressed {
+                lvl16 = ulti16
+            } else if lvl16pressed && aghanimpressed {
+                lvl16agha = aulti16
+            }
+        }
 
-   
+    }
+
+    //Test func to play sound when timer reach 10 sec
+    func soundTEN(soundname: String) {
+        //add sound
+        print(soundname);
+        soundTEN = false;
+    }
+    
+    //Test func to play sound when timer reach 0 sec
+    func soundZERO(soundname: String) {
+        //add sound
+        print(soundname);
+        
+        timer.invalidate();
+        readyspell.alpha = 1;
+        
+        soundZERO = false;
+    }
 }

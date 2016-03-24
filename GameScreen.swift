@@ -181,31 +181,32 @@ class GameScreen: SKScene {
                         case "Reset":
                             
                             //Stop timer
-                            hero.timer.invalidate()
+                            hero.timer.invalidate();
+                            
+                            //Reset readyspell sprite
+                            hero.readyspell.alpha = 0;
                             
                             //Start updating and check what to update
-                            hero.isStarted = true
-                            if hero.lvl6pressed && !hero.aghanimpressed{
-                                hero.lvl6 = hero.ulti6
-                            } else if hero.lvl6pressed && hero.aghanimpressed {
-                                hero.lvl6agha = hero.aulti6
-                            } else if hero.lvl11pressed && !hero.aghanimpressed {
-                                hero.lvl11 = hero.ulti11
-                            } else if hero.lvl11pressed && hero.aghanimpressed {
-                                hero.lvl11agha = hero.aulti11
-                            } else if hero.lvl16pressed && !hero.aghanimpressed {
-                                hero.lvl16 = hero.ulti16
-                            } else if hero.lvl16pressed && hero.aghanimpressed {
-                                hero.lvl16agha = hero.aulti16
-                            }
+                            hero.isStarted = true;
+                        
+                            //Reset cooldowns
+                            hero.resetcooldowns();
+                        
+                            //Reset cooldown controller
+                            hero.soundTEN = true;
+                            hero.soundZERO = true;
                         
                         case "Aghanim":
+                            hero.timer.invalidate();
+                            
                             hero.aghanimpressed = !hero.aghanimpressed
                             if hero.scepter.alpha == 0.5 {
                                 hero.scepter.alpha = 1;
                             } else { hero.scepter.alpha = 0.5; }
                         
                         case "Octarine":
+                            hero.timer.invalidate();
+                            
                             hero.octarine = !hero.octarine
                             hero.octarinepressed = !hero.octarinepressed
                             
@@ -221,6 +222,14 @@ class GameScreen: SKScene {
                             } else { hero.core.alpha = 0.5; }
                         
                         case "Level6":
+                            hero.timer.invalidate();
+
+                            //Start updating and check what to update
+                            hero.isStarted = true;
+                            
+                            //Reset cooldowns
+                            hero.resetcooldowns();
+                            
                             hero.lvl6pressed = true;
                             hero.lvl11pressed = false;
                             hero.lvl16pressed = false;
@@ -229,6 +238,14 @@ class GameScreen: SKScene {
                             hero.level16.alpha = 1
 
                         case "Level11":
+                            hero.timer.invalidate();
+                            
+                            //Start updating and check what to update
+                            hero.isStarted = true;
+                            
+                            //Reset cooldowns
+                            hero.resetcooldowns();
+                            
                             hero.lvl6pressed = false;
                             hero.lvl11pressed = true;
                             hero.lvl16pressed = false;
@@ -238,6 +255,14 @@ class GameScreen: SKScene {
                         
                         
                         case "Level16":
+                            hero.timer.invalidate();
+
+                            //Start updating and check what to update
+                            hero.isStarted = true;
+                            
+                            //Reset cooldowns
+                            hero.resetcooldowns();
+                            
                             hero.lvl6pressed = false;
                             hero.lvl11pressed = false;
                             hero.lvl16pressed = true;
