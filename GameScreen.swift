@@ -16,6 +16,7 @@ class GameScreen: SKScene {
     var cam: SKCameraNode = SKCameraNode()
     //var test:CGFloat = 0;
     var delta:CGFloat? = 0;
+    var xdelta: CGFloat = 0;
     var olddelta:CGFloat? = 0;
     var RoundedRect:SKSpriteNode!
     var counts: Int = 1;
@@ -25,19 +26,21 @@ class GameScreen: SKScene {
     
     
     //var testero: Hero!
-    var Heroes: Set<Hero> = []
+    var Heroes: Set<Hero> = [];
     var HeroDB = SimpleDB();
-    var node: Hero!
-    var node2: SKNode!
+    var node: Hero!;
+    var node2: SKNode!;
 
     
-    var timer:SKSpriteNode!
-    var aghanim:SKSpriteNode!
-    var start:SKSpriteNode!
-    var reset:SKSpriteNode!
+    var timer:SKSpriteNode!;
+    var aghanim:SKSpriteNode!;
+    var start:SKSpriteNode!;
+    var reset:SKSpriteNode!;
     var started: Bool = false;
     
-    var oldpos: CGFloat!
+    var oldpos: CGFloat!;
+    
+    var nodeismoving: Bool = true;
     
     //var sizee: CGSize!
     
@@ -48,7 +51,7 @@ class GameScreen: SKScene {
     
     //Init with size and set of selected heroes Set<String>
     init(size: CGSize, set: Set<String>) {
-        super.init(size: size)
+        super.init(size: size);
         self.selectedheroes = set;
         
     }
@@ -59,64 +62,64 @@ class GameScreen: SKScene {
    
     override func didMoveToView(view: SKView) {
         
-        self.anchorPoint = CGPointMake(0, 0)
+        self.anchorPoint = CGPointMake(0, 0);
         
-        var test: String = ""
+        var test: String = "";
         for lel in selectedheroes {
-            test = test + " \n" + lel
-            print(lel)
+            test = test + " \n" + lel;
+            print(lel);
         }
         
-        backgroundColor = SKColor.grayColor()
-        self.name = "Main"
+        backgroundColor = SKColor.grayColor();
+        self.name = "Main";
 
         //Add camera
-        self.camera = cam
-        cam.position = CGPointMake(self.frame.width / 2, self.frame.height / 2)
+        self.camera = cam;
+        cam.position = CGPointMake(self.frame.width / 2, self.frame.height / 2);
         
         
-        let icon = SKSpriteNode(imageNamed: "Tidehunter")
+        let icon = SKSpriteNode(imageNamed: "Tidehunter");
         
-        RoundedRect = SKSpriteNode(color: UIColor.whiteColor(), size: CGSizeMake(self.frame.width * 0.98, icon.frame.height))
-        RoundedRect.position = CGPointMake(self.frame.midX - RoundedRect.frame.width / 2, self.frame.maxY - RoundedRect.frame.height) // задаем позицию.
-        RoundedRect.anchorPoint = CGPointMake(0, 0)
-        RoundedRect.name = "RoundedRect" // задаем имя.
+        RoundedRect = SKSpriteNode(color: UIColor.whiteColor(), size: CGSizeMake(self.frame.width * 0.98, icon.frame.height));
+        RoundedRect.position = CGPointMake(self.frame.midX - RoundedRect.frame.width / 2, self.frame.maxY - RoundedRect.frame.height); // задаем позицию.
+        RoundedRect.anchorPoint = CGPointMake(0, 0);
+        RoundedRect.name = "RoundedRect"; // задаем имя.
         RoundedRect.zPosition = 10;
-        self.addChild(RoundedRect) // добавляем наш объект на нашу сцену.
+        self.addChild(RoundedRect); // добавляем наш объект на нашу сцену.
         
         
-        icon.position = CGPointMake(0, 0)
-        icon.anchorPoint = CGPointMake(0, 0)
+        icon.position = CGPointMake(0, 0);
+        icon.anchorPoint = CGPointMake(0, 0);
         icon.zPosition = 4;
-        RoundedRect.addChild(icon)
+        RoundedRect.addChild(icon);
         
-        timer = SKSpriteNode(color: UIColor.blackColor(), size: CGSizeMake(RoundedRect.frame.width / 2 - icon.frame.width, icon.frame.height / 2))
-        timer.anchorPoint = CGPointMake(0, 0)
-        timer.position = CGPointMake(icon.frame.width, icon.frame.height / 2)
-        RoundedRect.addChild(timer)
-        count = SKLabelNode(text: "\(counts)")
-        count.name = "bla"
-        count.position = CGPointMake(timer.frame.width / 2, timer.frame.height / 2)
-        timer.addChild(count)
+        timer = SKSpriteNode(color: UIColor.blackColor(), size: CGSizeMake(RoundedRect.frame.width / 2 - icon.frame.width, icon.frame.height / 2));
+        timer.anchorPoint = CGPointMake(0, 0);
+        timer.position = CGPointMake(icon.frame.width, icon.frame.height / 2);
+        RoundedRect.addChild(timer);
+        count = SKLabelNode(text: "\(counts)");
+        count.name = "bla";
+        count.position = CGPointMake(timer.frame.width / 2, timer.frame.height / 2);
+        timer.addChild(count);
         
-        aghanim = SKSpriteNode(color: UIColor.redColor(), size: CGSizeMake(RoundedRect.frame.width / 2 - icon.frame.width, icon.frame.height / 2))
-        aghanim.anchorPoint = CGPointMake(0, 0)
-        aghanim.position = CGPointMake(icon.frame.width, 0)
-        aghanim.name = "Aghanim"
-        RoundedRect.addChild(aghanim)
+        aghanim = SKSpriteNode(color: UIColor.redColor(), size: CGSizeMake(RoundedRect.frame.width / 2 - icon.frame.width, icon.frame.height / 2));
+        aghanim.anchorPoint = CGPointMake(0, 0);
+        aghanim.position = CGPointMake(icon.frame.width, 0);
+        aghanim.name = "Aghanim";
+        RoundedRect.addChild(aghanim);
         
-        start = SKSpriteNode(imageNamed: "startbutt")
-        start.size = CGSizeMake(RoundedRect.frame.width / 4, RoundedRect.frame.height)
-        start.position = CGPointMake(icon.frame.width + aghanim.frame.width, 0)
-        start.anchorPoint = CGPointMake(0, 0)
-        start.name = "start"
-        RoundedRect.addChild(start)
+        start = SKSpriteNode(imageNamed: "startbutt");
+        start.size = CGSizeMake(RoundedRect.frame.width / 4, RoundedRect.frame.height);
+        start.position = CGPointMake(icon.frame.width + aghanim.frame.width, 0);
+        start.anchorPoint = CGPointMake(0, 0);
+        start.name = "start";
+        RoundedRect.addChild(start);
         
-        reset = SKSpriteNode(imageNamed: "info")
-        reset.size = CGSizeMake(RoundedRect.frame.width / 4, RoundedRect.frame.height)
-        reset.position = CGPointMake(icon.frame.width + aghanim.frame.width + start.frame.width, 0)
-        reset.anchorPoint = CGPointMake(0, 0)
-        RoundedRect.addChild(reset)
+        reset = SKSpriteNode(imageNamed: "info");
+        reset.size = CGSizeMake(RoundedRect.frame.width / 4, RoundedRect.frame.height);
+        reset.position = CGPointMake(icon.frame.width + aghanim.frame.width + start.frame.width, 0);
+        reset.anchorPoint = CGPointMake(0, 0);
+        RoundedRect.addChild(reset);
         
         //Create hero nodes using set from previos scene and SimpleDB
         //2x loop. 1 iterating by Set<String>, second iterating SimpleDB.HeroSet<Character>
@@ -133,7 +136,7 @@ class GameScreen: SKScene {
                     Heroes.insert(character);
                     self.addChild(character);
                 }
-                herocount++
+                herocount++;
             }
         }
         
@@ -144,20 +147,47 @@ class GameScreen: SKScene {
             
             //Check touch location and previos touch location
             //Calculating delta to scroll camera
-            let start = touch.locationInNode(self)
-            let previousLocation = touch.previousLocationInNode(self)
-            delta = start.y - previousLocation.y
-            print("\(start.x)", "\(start.y)")
+            let start = touch.locationInNode(self);
+            let previousLocation = touch.previousLocationInNode(self);
+            delta = start.y - previousLocation.y;
+            print("\(start.x)", "\(start.y)");
+            
+            //Check touch location and previos touch location
+            //Calculating delta to move nodes and delete them
+            let xstart = touch.locationInNode(self);
+            let xpreviosloc = touch.previousLocationInNode(self);
+            let nodee = self.nodeAtPoint(xstart);//.parent! as! Hero
+            let name: String = nodee.name!;
+            
+            if name == "Icon" || name == "Skill" {
+                xdelta = start.x - previousLocation.x;
+            }
+            
+            //Find touched node and move by xdelta in touch
+            for hero in Heroes {
+                //if hero.name == node.name {
+                if hero.name == nodee.parent?.name! {
+                    if (xstart.x != xpreviosloc.x) {
+                        delta = 0;
+                        hero.position.x += xdelta;
+
+                    } else { xdelta = 0; }
+                    
+                    if hero.position.x > self.frame.midX {
+                        hero.removeFromParent();
+                    }
+                }
+            }
         }
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         for touch: AnyObject in touches {
             
-            let location = touch.locationInNode(self)
-            let nodee = self.nodeAtPoint(location)//.parent! as! Hero
+            let location = touch.locationInNode(self);
+            let nodee = self.nodeAtPoint(location);//.parent! as! Hero
             let name: String = nodee.name!;
-            print(nodee.name!)
+            print(nodee.name!);
             
             //iterate hero nodes on scene
             //check name of pressed node equal it to set of existing nodes
@@ -168,16 +198,16 @@ class GameScreen: SKScene {
                     switch(name) {
                         case "Start":
                             //Stop timer
-                            hero.timer.invalidate()
+                            hero.timer.invalidate();
                             
                             //Start timer
-                            hero.testtimer()
+                            hero.testtimer();
                             
                             //Stop updating
-                            hero.isStarted = false
+                            hero.isStarted = false;
                             
                             //Change scale to make pressed button effect
-                            hero.start.setScale(0.9)
+                            hero.start.setScale(0.9);
                         case "Reset":
                             
                             //Stop timer
@@ -207,8 +237,8 @@ class GameScreen: SKScene {
                         case "Octarine":
                             hero.timer.invalidate();
                             
-                            hero.octarine = !hero.octarine
-                            hero.octarinepressed = !hero.octarinepressed
+                            hero.octarine = !hero.octarine;
+                            hero.octarinepressed = !hero.octarinepressed;
                             
                             switch(hero.octarinepressed) {
                                 case true:
@@ -249,9 +279,9 @@ class GameScreen: SKScene {
                             hero.lvl6pressed = false;
                             hero.lvl11pressed = true;
                             hero.lvl16pressed = false;
-                            hero.level6.alpha = 1
-                            hero.level11.alpha = 0.5
-                            hero.level16.alpha = 1
+                            hero.level6.alpha = 1;
+                            hero.level11.alpha = 0.5;
+                            hero.level16.alpha = 1;
                         
                         
                         case "Level16":
@@ -266,9 +296,9 @@ class GameScreen: SKScene {
                             hero.lvl6pressed = false;
                             hero.lvl11pressed = false;
                             hero.lvl16pressed = true;
-                            hero.level6.alpha = 1
-                            hero.level11.alpha = 1
-                            hero.level16.alpha = 0.5
+                            hero.level6.alpha = 1;
+                            hero.level11.alpha = 1;
+                            hero.level16.alpha = 0.5;
                         
                         
                     default:
@@ -284,8 +314,8 @@ class GameScreen: SKScene {
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         for touch: AnyObject in touches {
             
-            let location = touch.locationInNode(self)
-            let nodee = self.nodeAtPoint(location)//.parent! as! Hero
+            let location = touch.locationInNode(self);
+            let nodee = self.nodeAtPoint(location);
             let name: String = nodee.name!;
             let locationbuttons = touch.locationInNode(RoundedRect)
 
@@ -304,13 +334,15 @@ class GameScreen: SKScene {
             }
         }
     }
+            
+            //Mojno delete
             if start.containsPoint(locationbuttons) {
-                print("tapped! + Start")
-                started = true
+                print("tapped! + Start");
+                started = true;
                 
             } else if reset.containsPoint(locationbuttons) {
-                print("tapped! + Settings")
-                started = false
+                print("tapped! + Settings");
+                started = false;
             }
         }
         
@@ -320,18 +352,26 @@ class GameScreen: SKScene {
     override func update(currentTime: NSTimeInterval) {
         
             for hero in Heroes {
-                hero.update(currentTime)
+                hero.update(currentTime);
+                
+                if (xdelta != 0) && hero.position.x > (self.frame.width - hero.frame.width) / 2 {
+                    hero.position.x -= 5;
+                }
             }
+        
+        if nodeismoving {
+            
+        }
    
         //Update camera (scroll)
         while (olddelta != delta) {
             if (cam.position.y - delta!) >= self.frame.midY {
                 
-                cam.position.y = self.frame.midY
+                cam.position.y = self.frame.midY;
             } else if (cam.position.y - delta!) <= -1000 {
-                cam.position.y = -1000
+                cam.position.y = -1000;
                 } else {
-                cam.position.y += -delta! }
+                cam.position.y += -delta!; }
             
                 olddelta = delta
             }

@@ -83,7 +83,6 @@ class GameScene: SKScene {
                 scene.scaleMode = .AspectFill
                 self.view?.presentScene(scene, transition: transition)
                 
-                
             } else if settbut.containsPoint(locationbuttons) {
                 print("tapped! + Settings")
                 startbut.alpha = 1;

@@ -334,6 +334,7 @@ class Hero: SKSpriteNode {
         return Double(cooldown) * 75 / 100
     }
     
+    //Change cooldowns to octarine
     func octarinechange() {
         
         lvl6 = octarine(lvl6);
@@ -347,6 +348,7 @@ class Hero: SKSpriteNode {
         
     }
     
+    //Change cooldowns back from
     func octarineback() {
         
         lvl6 = ulti6
@@ -360,6 +362,7 @@ class Hero: SKSpriteNode {
         
     }
     
+    //Reset all cooldowns to default
     func resetcooldowns() {
         switch(octarinepressed) {
         case true:
