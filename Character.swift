@@ -26,18 +26,18 @@ class Character: Hashable {
     var aghanim: Bool!
     
     //simple lvl cooldowns
-    var lvl6cool: Int!
-    var lvl11cool: Int!
-    var lvl16cool: Int!
+    var lvl6cool: Double!
+    var lvl11cool: Double!
+    var lvl16cool: Double!
     
     //aghanimlvl cooldowns
-    var lvl6agha: Int!
-    var lvl11agha: Int!
-    var lvl16agha: Int!
+    var lvl6agha: Double!
+    var lvl11agha: Double!
+    var lvl16agha: Double!
     
     init(uid: Int, name: String, ultiname: String, aghanim: Bool,
-        lvl6cool: Int, lvl11cool: Int, lvl16cool: Int,
-        lvl6agha: Int, lvl11agha: Int, lvl16agha: Int){
+        lvl6cool: Double, lvl11cool: Double, lvl16cool: Double,
+        lvl6agha: Double, lvl11agha: Double, lvl16agha: Double){
         
             self.uid = uid;
             

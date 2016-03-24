@@ -207,6 +207,15 @@ class GameScreen: SKScene {
                         
                         case "Octarine":
                             hero.octarine = !hero.octarine
+                            hero.octarinepressed = !hero.octarinepressed
+                            
+                            switch(hero.octarinepressed) {
+                                case true:
+                                    hero.octarinechange();
+                                case false:
+                                    hero.octarineback();
+                            }
+                            
                             if hero.core.alpha == 0.5 {
                                 hero.core.alpha = 1;
                             } else { hero.core.alpha = 0.5; }

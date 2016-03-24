@@ -14,19 +14,19 @@ class Hero: SKSpriteNode {
     var seconds: Int = 1
     
     //Levels check
-    var lvl6: Int = 0;
+    var lvl6: Double = 0;
     var lvl6pressed: Bool = true;
-    var lvl11: Int = 0;
+    var lvl11: Double = 0;
     var lvl11pressed: Bool = false;
-    var lvl16: Int = 0;
+    var lvl16: Double = 0;
     var lvl16pressed: Bool = false;
 
     
-    var lvl6agha: Int = 0
+    var lvl6agha: Double = 0
     var lvl6aghapressed: Bool = false;
-    var lvl11agha: Int = 0
+    var lvl11agha: Double = 0
     var lvl11aghapressed: Bool = false;
-    var lvl16agha: Int = 0;
+    var lvl16agha: Double = 0;
     var lvl16aghapressed: Bool = false;
     
     
@@ -34,12 +34,12 @@ class Hero: SKSpriteNode {
     var iconID: String!
     
     //Levels
-    var ulti6: Int = 0;
-    var ulti11: Int = 0;
-    var ulti16: Int = 0;
-    var aulti6: Int = 0;
-    var aulti11: Int = 0;
-    var aulti16: Int = 0;
+    var ulti6: Double = 0;
+    var ulti11: Double = 0;
+    var ulti16: Double = 0;
+    var aulti6: Double = 0;
+    var aulti11: Double = 0;
+    var aulti16: Double = 0;
     
     
     var isStarted: Bool = true
@@ -50,6 +50,7 @@ class Hero: SKSpriteNode {
     //Check for buttons press
     var aghanimpressed: Bool = false
     var octarine: Bool = false
+    var octarinepressed: Bool = false
     
     //Main sprites
     var icon: SKSpriteNode!
@@ -118,6 +119,7 @@ class Hero: SKSpriteNode {
         label = SKLabelNode(text: "\(lvl6)")
         label.name = "Timer"
         label.fontSize = 50
+        label.fontName = "AlNile-Bold"
         label.position = CGPointMake(labelframe.frame.width / 2, labelframe.frame.height / 2 - label.frame.height / 2)
         labelframe.addChild(label)
         
@@ -205,24 +207,48 @@ class Hero: SKSpriteNode {
 
     }
    
+    var dobl: Double = 12.2
     
     
     func update(nstime: NSTimeInterval) {
     
-        if isStarted {
-            if lvl6pressed && !aghanimpressed{
-                label.text = "\(ulti6)"
-            } else if lvl6pressed && aghanimpressed {
-                label.text = "\(aulti6)"
-            } else if lvl11pressed && !aghanimpressed {
-                label.text = "\(ulti11)"
-            } else if lvl11pressed && aghanimpressed {
-                label.text = "\(aulti11)"
-            } else if lvl16pressed && !aghanimpressed {
-                label.text = "\(ulti16)"
-            } else if lvl16pressed && aghanimpressed {
-                label.text = "\(aulti16)"
-            }        }
+        switch(octarine) {
+        case true:
+            
+            if isStarted {
+                if lvl6pressed && !aghanimpressed{
+                    label.text = "\(octarine(ulti6))"
+                } else if lvl6pressed && aghanimpressed {
+                    label.text = "\(octarine(aulti6))"
+                } else if lvl11pressed && !aghanimpressed {
+                    label.text = "\(octarine(ulti11))"
+                } else if lvl11pressed && aghanimpressed  {
+                    label.text = "\(octarine(aulti11))"
+                } else if lvl16pressed && !aghanimpressed {
+                    label.text = "\(octarine(ulti16))"
+                } else if lvl16pressed && aghanimpressed {
+                    label.text = "\(octarine(aulti16))"
+                }        }
+        case false:
+            if isStarted {
+                if lvl6pressed && !aghanimpressed{
+                    label.text = "\(ulti6)"
+                } else if lvl6pressed && aghanimpressed {
+                    label.text = "\(aulti6)"
+                } else if lvl11pressed && !aghanimpressed {
+                    label.text = "\(ulti11)"
+                } else if lvl11pressed && aghanimpressed {
+                    label.text = "\(aulti11)"
+                } else if lvl16pressed && !aghanimpressed {
+                    label.text = "\(ulti16)"
+                } else if lvl16pressed && aghanimpressed {
+                    label.text = "\(aulti16)"
+                }        }
+        default:
+            print("eror octarine")
+        }
+        
+        
     }
     
     //Add a timer
@@ -231,26 +257,80 @@ class Hero: SKSpriteNode {
 
     }
     
+    
     //Selector for timer
     func countdown() {
-        
-        //Докинуть октарин поверх присвоения текста
-        if lvl6pressed && !aghanimpressed{
-            label.text = "\(lvl6--)"
-        } else if lvl6pressed && aghanimpressed {
-            label.text = "\(lvl6agha--)"
-        } else if lvl11pressed && !aghanimpressed {
-            label.text = "\(lvl11--)"
-        } else if lvl11pressed && aghanimpressed {
-            label.text = "\(lvl11agha--)"
-        } else if lvl16pressed && !aghanimpressed {
-            label.text = "\(lvl16--)"
-        } else if lvl16pressed && aghanimpressed {
-            label.text = "\(lvl16agha--)"
+
+        switch(octarine) {
+        case true:
+            
+            if lvl6pressed && !aghanimpressed{
+                label.text = "\(lvl6--)"
+            } else if lvl6pressed && aghanimpressed {
+                label.text = "\(lvl6agha--)"
+            } else if lvl11pressed && !aghanimpressed {
+                label.text = "\(lvl11--)"
+            } else if lvl11pressed && aghanimpressed {
+                label.text = "\(lvl11agha--)"
+            } else if lvl16pressed && !aghanimpressed {
+                label.text = "\(lvl16--)"
+            } else if lvl16pressed && aghanimpressed {
+                label.text = "\(lvl16agha--)"
+            }
+        case false:
+            
+            if lvl6pressed && !aghanimpressed{
+                label.text = "\(lvl6--)"
+            } else if lvl6pressed && aghanimpressed {
+                label.text = "\(lvl6agha--)"
+            } else if lvl11pressed && !aghanimpressed {
+                label.text = "\(lvl11--)"
+            } else if lvl11pressed && aghanimpressed {
+                label.text = "\(lvl11agha--)"
+            } else if lvl16pressed && !aghanimpressed {
+                label.text = "\(lvl16--)"
+            } else if lvl16pressed && aghanimpressed {
+                label.text = "\(lvl16agha--)"
+            }
+        default:
+            print("eror octarine")
         }
+
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    func octarine(cooldown: Double) -> Double {
+        return Double(cooldown) * 75 / 100
+    }
+    
+    func octarinechange() {
+        
+        lvl6 = octarine(lvl6);
+        lvl6agha = octarine(lvl6agha);
+        
+        lvl11 = octarine(lvl11);
+        lvl11agha = octarine(lvl11agha);
+        
+        lvl16 = octarine(lvl16);
+        lvl16agha = octarine(lvl16agha);
+        
+    }
+    
+    func octarineback() {
+        
+        lvl6 = ulti6
+        lvl6agha = aulti6;
+        
+        lvl11 = ulti11;
+        lvl11agha = aulti11;
+        
+        lvl16 = ulti16;
+        lvl16agha = aulti16;
+        
+    }
+
+   
 }
