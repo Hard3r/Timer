@@ -29,6 +29,7 @@ class GameScreen: SKScene {
     
     //var testero: Hero!
     var Heroes: Set<Hero> = [];
+    var Common: Set<Commons> = [];
     var HeroDB = SimpleDB();
     var node: Hero!;
     var node2: SKNode!;
@@ -82,16 +83,12 @@ class GameScreen: SKScene {
         self.camera = cam;
         cam.position = CGPointMake(self.frame.width / 2, self.frame.height / 2);
         
+        var testerino = Commons(texture: nil, color: UIColor.whiteColor(), size: CGSizeMake(self.frame.width * 0.98 , icon.frame.height), iconId: "Enigma", cooldown: 0.0, highborder: 10.0, highestborder: 15.0);
+        testerino.position = CGPointMake(self.frame.midX - testerino.frame.width / 2, self.frame.maxY - testerino.frame.height); // задаем позицию.
+        testerino.name = "Test";
+        Common.insert(testerino);
+        self.addChild(testerino);
         
-        
-        /*
-        RoundedRect = SKSpriteNode(color: UIColor.whiteColor(), size: CGSizeMake(self.frame.width * 0.98, icon.frame.height));
-        RoundedRect.position = CGPointMake(self.frame.midX - RoundedRect.frame.width / 2, self.frame.maxY - RoundedRect.frame.height); // задаем позицию.
-        RoundedRect.anchorPoint = CGPointMake(0, 0);
-        RoundedRect.name = "RoundedRect"; // задаем имя.
-        RoundedRect.zPosition = 10;
-        self.addChild(RoundedRect); // добавляем наш объект на нашу сцену.
-        */
         //Create hero nodes using set from previos scene and SimpleDB
         //2x loop. 1 iterating by Set<String>, second iterating SimpleDB.HeroSet<Character>
         //var herocount: Int = 0;
@@ -160,6 +157,29 @@ class GameScreen: SKScene {
             let nodee = self.nodeAtPoint(location);//.parent! as! Hero
             let name: String = nodee.name!;
             print(nodee.name!);
+            
+            //iterate commons
+            for common in Common {
+                if common.name == nodee.parent?.name! {
+            switch(name) {
+                case "commonStart":
+                    //Stop timer
+                    common.timer.invalidate();
+                    
+                    //Start timer
+                    common.startTimer();
+                
+                    //Stop udpdate
+                    common.isStarted = false;
+                case "commonReset":
+                
+                    //Reset
+                    common.resetTimer();
+            default:
+                print("nothing");
+                    }
+                }
+            }
             
             //iterate hero nodes on scene
             //check name of pressed node equal it to set of existing nodes
@@ -284,6 +304,7 @@ class GameScreen: SKScene {
     
     override func update(currentTime: NSTimeInterval) {
         
+            //Update heroes
             for hero in Heroes {
                 hero.update(currentTime);
                 
@@ -303,6 +324,10 @@ class GameScreen: SKScene {
                     }
                 }
     
+                //Update commons
+                for common in Common {
+                    common.update();
+                }
         
         if isremoved {
             

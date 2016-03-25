@@ -81,33 +81,26 @@ class Hero: SKSpriteNode {
     //iconID: String, aghanim: Bool,
     //level6cool: Int, level11cool: Int, level16cool: Int, level6agha: Int, level11agha: Int, level16agha: Int
     
-    
     init(texture: SKTexture?, color: UIColor, size: CGSize, hero: Character) {
-       super.init(texture: texture, color: color, size: size)
-            self.iconID = hero.name;
-            self.aghanim = hero.aghanim;
-            self.lvl6 = hero.lvl6cool;
-            self.lvl11 = hero.lvl11cool;
-            self.lvl16 = hero.lvl16cool;
-            self.lvl6agha = hero.lvl6agha;
-            self.lvl11agha = hero.lvl11agha;
-            self.lvl16agha = hero.lvl16agha;
-            self.ulti6 = hero.lvl6cool;
-            self.ulti11 = hero.lvl11cool;
-            self.ulti16 = hero.lvl16cool;
-            self.aulti6 = hero.lvl6agha;
-            self.aulti11 = hero.lvl11agha;
-            self.aulti16 = hero.lvl16agha;
+        super.init(texture: texture, color: color, size: size)
+        self.iconID = hero.name;
+        self.aghanim = hero.aghanim;
+        self.lvl6 = hero.lvl6cool;
+        self.lvl11 = hero.lvl11cool;
+        self.lvl16 = hero.lvl16cool;
+        self.lvl6agha = hero.lvl6agha;
+        self.lvl11agha = hero.lvl11agha;
+        self.lvl16agha = hero.lvl16agha;
+        self.ulti6 = hero.lvl6cool;
+        self.ulti11 = hero.lvl11cool;
+        self.ulti16 = hero.lvl16cool;
+        self.aulti6 = hero.lvl6agha;
+        self.aulti11 = hero.lvl11agha;
+        self.aulti16 = hero.lvl16agha;
         self.anchorPoint = CGPointMake(0, 0);
-        
-        /*
-        self.physicsBody = SKPhysicsBody(rectangleOfSize: CGSizeMake(self.frame.width, self.frame.height + 5), center: CGPointMake(self.frame.midX, self.frame.midY));
-        self.physicsBody?.affectedByGravity = false;
-        self.physicsBody?.friction = 0;
-        self.physicsBody?.dynamic = true;
-*/
         initchilds()
     }
+    
     
     
     func initchilds() {
