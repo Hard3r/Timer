@@ -25,7 +25,8 @@ struct HeroNames {
         "Warlock",
         "Lich",
         "Venomancer",
-        "Bane", "Puck",
+        "Bane",
+        "Puck",
         "Devouver",
         "DarkSeer",
         "Spectre"]

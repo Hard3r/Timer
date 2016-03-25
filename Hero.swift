@@ -98,12 +98,20 @@ class Hero: SKSpriteNode {
             self.aulti6 = hero.lvl6agha;
             self.aulti11 = hero.lvl11agha;
             self.aulti16 = hero.lvl16agha;
-            self.anchorPoint = CGPointMake(0, 0)
+        self.anchorPoint = CGPointMake(0, 0);
+        
+        /*
+        self.physicsBody = SKPhysicsBody(rectangleOfSize: CGSizeMake(self.frame.width, self.frame.height + 5), center: CGPointMake(self.frame.midX, self.frame.midY));
+        self.physicsBody?.affectedByGravity = false;
+        self.physicsBody?.friction = 0;
+        self.physicsBody?.dynamic = true;
+*/
         initchilds()
     }
     
     
     func initchilds() {
+        
         
         //Hero icon
         icon = SKSpriteNode(imageNamed: iconID)

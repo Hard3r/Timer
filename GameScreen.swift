@@ -22,6 +22,7 @@ class GameScreen: SKScene {
     var RoundedRect:SKSpriteNode!
     var counts: Int = 1;
     var counte: Int = 60;
+    var herocount: Int = 0;
     var count: SKLabelNode!
     //var tests: SKSpriteNode!
     
@@ -38,7 +39,9 @@ class GameScreen: SKScene {
     var start:SKSpriteNode!;
     var reset:SKSpriteNode!;
     var started: Bool = false;
+    var isremoved: Bool = false;
     
+    let icon = SKSpriteNode(imageNamed: "Tidehunter");
     var oldpos: CGFloat!;
     
     
@@ -62,12 +65,14 @@ class GameScreen: SKScene {
    
     override func didMoveToView(view: SKView) {
         
-        self.anchorPoint = CGPointMake(0, 0);
+        //self.anchorPoint = CGPointMake(0, 0);
+        //self.physicsBody = SKPhysicsBody(rectangleOfSize: self.size, center: CGPointMake(self.frame.midX, self.frame.midY));
+        //self.physicsBody?.affectedByGravity = false;
         
         var test: String = "";
-        for lel in Heroes {
-            test = test + " \n" + lel.name!;
-            print(lel);
+        for lel in selectedheroes {
+            test = test + " \n" + lel;
+            print(test);
         }
         
         backgroundColor = SKColor.grayColor();
@@ -78,7 +83,7 @@ class GameScreen: SKScene {
         cam.position = CGPointMake(self.frame.width / 2, self.frame.height / 2);
         
         
-        let icon = SKSpriteNode(imageNamed: "Tidehunter");
+        
         /*
         RoundedRect = SKSpriteNode(color: UIColor.whiteColor(), size: CGSizeMake(self.frame.width * 0.98, icon.frame.height));
         RoundedRect.position = CGPointMake(self.frame.midX - RoundedRect.frame.width / 2, self.frame.maxY - RoundedRect.frame.height); // задаем позицию.
@@ -89,7 +94,7 @@ class GameScreen: SKScene {
         */
         //Create hero nodes using set from previos scene and SimpleDB
         //2x loop. 1 iterating by Set<String>, second iterating SimpleDB.HeroSet<Character>
-        var herocount: Int = 0;
+        //var herocount: Int = 0;
         for heros in selectedheroes {
             for herosDB in HeroDB.HeroSet {
                 if heros == herosDB.name {
@@ -97,14 +102,17 @@ class GameScreen: SKScene {
                         size: CGSizeMake(self.frame.width * 0.98, icon.frame.height * 2),
                         hero: herosDB);
                     
-                    character.position = CGPointMake((self.frame.width - character.frame.width) / 2, self.frame.maxY - (character.frame.height + 20) * CGFloat(herocount));
+                    character.position = CGPointMake((self.frame.width - character.frame.width) / 2, self.frame.midY - (character.frame.height + 20) * CGFloat(herocount));
                     character.name = herosDB.name;
                     Heroes.insert(character);
                     self.addChild(character);
                 }
-                herocount++;
+                
             }
+            herocount++;
         }
+        
+        herocount = 0;
         
     }
     
@@ -139,10 +147,7 @@ class GameScreen: SKScene {
 
                     } else { xdelta = 0; }
                     
-                    if hero.position.x > self.frame.midX {
-                        hero.removeFromParent();
-                        Heroes.remove(hero);
-                    }
+                    
                 }
             }
         }
@@ -282,17 +287,34 @@ class GameScreen: SKScene {
             for hero in Heroes {
                 hero.update(currentTime);
                 
+                
                 //Movement of node
                 if hero.position.x > (self.frame.width - hero.frame.width) / 2 {
                         hero.position.x -= 5;
                 } else if hero.position.x - 5 <= (self.frame.width - hero.frame.width) / 2 {
                         hero.position.x = (self.frame.width - hero.frame.width) / 2;
                     }
+                
+                //Delete node
+                if hero.position.x > self.frame.midX {
+                    hero.removeFromParent();
+                    Heroes.remove(hero);
+                    isremoved = true;
+                    }
                 }
-       
+    
+        
+        if isremoved {
+            
+            for (hero) in Heroes {
+            hero.position = CGPointMake((self.frame.width - hero.frame.width) / 2, self.frame.midY - (hero.frame.height + 20) * CGFloat(herocount));
+                herocount++;
+            }
+            isremoved = false;
+        }
    
         //Update camera (scroll)
-        while (olddelta != delta) {
+        if (olddelta != delta) {
             if (cam.position.y - delta!) >= self.frame.midY {
                 
                 cam.position.y = self.frame.midY;
