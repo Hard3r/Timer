@@ -33,6 +33,7 @@ class GameScreen: SKScene {
     var HeroDB = SimpleDB();
     var node: Hero!;
     var node2: SKNode!;
+    var rune: Commons!;
 
     
     var timer:SKSpriteNode!;
@@ -65,10 +66,7 @@ class GameScreen: SKScene {
     }
    
     override func didMoveToView(view: SKView) {
-        
-        //self.anchorPoint = CGPointMake(0, 0);
-        //self.physicsBody = SKPhysicsBody(rectangleOfSize: self.size, center: CGPointMake(self.frame.midX, self.frame.midY));
-        //self.physicsBody?.affectedByGravity = false;
+
         
         var test: String = "";
         for lel in selectedheroes {
@@ -83,11 +81,31 @@ class GameScreen: SKScene {
         self.camera = cam;
         cam.position = CGPointMake(self.frame.width / 2, self.frame.height / 2);
         
-        var testerino = Commons(texture: nil, color: UIColor.whiteColor(), size: CGSizeMake(self.frame.width * 0.98 , icon.frame.height), iconId: "Enigma", cooldown: 0.0, highborder: 10.0, highestborder: 15.0);
-        testerino.position = CGPointMake(self.frame.midX - testerino.frame.width / 2, self.frame.maxY - testerino.frame.height); // задаем позицию.
-        testerino.name = "Test";
-        Common.insert(testerino);
-        self.addChild(testerino);
+        //Like back button frame;
+        start = SKSpriteNode(color: UIColor.whiteColor(), size: CGSizeMake(self.frame.width, icon.frame.height / 2));
+        start.anchorPoint = CGPointMake(0, 0);
+        start.position = CGPointMake(0, self.frame.maxY - start.frame.height);
+        start.name = "Menuframe";
+        self.addChild(start);
+        
+        
+        //Add roshan timer
+        let roshan = Commons(texture: nil, color: UIColor.whiteColor(), size: CGSizeMake(self.frame.width * 0.98 , 150), iconId: "roshan", cooldown: 0.0, highborder: 470.0, highestborder: 480.0);
+        roshan.position = CGPointMake(self.frame.midX - roshan.frame.width / 2, start.position.y - start.frame.height - roshan.frame.height / 2 - 20); // задаем позицию.
+        roshan.name = "roshan";
+        roshan.anchorPoint = CGPointMake(0, 0);
+        Common.insert(roshan);
+        self.addChild(roshan);
+        
+        //Add neutral timer
+        let centaur = commontimer("centaur", previousnode: roshan, highborder: 40.0, highestborder: 52.0);
+        Common.insert(centaur);
+        self.addChild(centaur);
+        
+        //Add rune timer
+        rune = commontimer("rune", previousnode: centaur, highborder: 50.0, highestborder: 60.0);
+        Common.insert(rune);
+        self.addChild(rune);
         
         //Create hero nodes using set from previos scene and SimpleDB
         //2x loop. 1 iterating by Set<String>, second iterating SimpleDB.HeroSet<Character>
@@ -99,7 +117,7 @@ class GameScreen: SKScene {
                         size: CGSizeMake(self.frame.width * 0.98, icon.frame.height * 2),
                         hero: herosDB);
                     
-                    character.position = CGPointMake((self.frame.width - character.frame.width) / 2, self.frame.midY - (character.frame.height + 20) * CGFloat(herocount));
+                    character.position = CGPointMake((self.frame.width - character.frame.width) / 2, (rune.position.y - rune.frame.height - character.frame.height / 2 - 20) - (character.frame.height + 20) * CGFloat(herocount));
                     character.name = herosDB.name;
                     Heroes.insert(character);
                     self.addChild(character);
@@ -163,6 +181,10 @@ class GameScreen: SKScene {
                 if common.name == nodee.parent?.name! {
             switch(name) {
                 case "commonStart":
+                    
+                    //Reset
+                    common.resetTimer();
+                    
                     //Stop timer
                     common.timer.invalidate();
                     
@@ -332,7 +354,7 @@ class GameScreen: SKScene {
         if isremoved {
             
             for (hero) in Heroes {
-            hero.position = CGPointMake((self.frame.width - hero.frame.width) / 2, self.frame.midY - (hero.frame.height + 20) * CGFloat(herocount));
+            hero.position = CGPointMake((self.frame.width - hero.frame.width) / 2, (rune.position.y - rune.frame.height - hero.frame.height / 2 - 20) - (hero.frame.height + 20) * CGFloat(herocount));
                 herocount++;
             }
             isremoved = false;
@@ -352,6 +374,15 @@ class GameScreen: SKScene {
         }
     }
     
+    
+    func commontimer(name: String, previousnode: SKSpriteNode, highborder: Double, highestborder: Double) -> Commons {
+        let testerino = Commons(texture: nil, color: UIColor.whiteColor(), size: CGSizeMake(self.frame.width * 0.98 , icon.frame.height), iconId: name, cooldown: 0.0, highborder: highborder, highestborder: highborder);
+        testerino.position = CGPointMake(self.frame.midX - testerino.frame.width / 2, previousnode.position.y - previousnode.frame.height  - 20);
+        testerino.name = name;
+        testerino.anchorPoint = CGPointMake(0, 0);
+        
+        return testerino;
+    }
 }
 
 

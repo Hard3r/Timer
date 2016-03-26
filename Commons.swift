@@ -56,6 +56,7 @@ class Commons: SKSpriteNode {
         
         //Icon image
         icon = SKSpriteNode(imageNamed: iconID);
+        icon.size = CGSizeMake(icon.frame.width * 2, self.frame.height);
         icon.anchorPoint = CGPointMake(0, 0);
         icon.position = CGPointMake(0, 0);
         icon.name = "commonIcon";
@@ -121,6 +122,8 @@ class Commons: SKSpriteNode {
     func resetTimer(){
         //Stop timer
         timer.invalidate();
+        
+        cooldown = cooldownsave;
         
         //Start updating label
         isStarted = true;
