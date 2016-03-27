@@ -98,7 +98,7 @@ class GameScreen: SKScene {
         self.addChild(roshan);
         
         //Add neutral timer
-        let centaur = commontimer("centaur", previousnode: roshan, highborder: 40.0, highestborder: 52.0);
+        let centaur = commontimer("centaur", previousnode: roshan, highborder: 40.0, highestborder: 60);
         Common.insert(centaur);
         self.addChild(centaur);
         
