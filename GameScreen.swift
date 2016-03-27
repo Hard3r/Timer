@@ -103,7 +103,7 @@ class GameScreen: SKScene {
         self.addChild(centaur);
         
         //Add rune timer
-        rune = commontimer("rune", previousnode: centaur, highborder: 50.0, highestborder: 60.0);
+        rune = commontimer("rune", previousnode: centaur, highborder: 110.0, highestborder: 120.0);
         Common.insert(rune);
         self.addChild(rune);
         
@@ -193,7 +193,10 @@ class GameScreen: SKScene {
                 
                     //Stop udpdate
                     common.isStarted = false;
-                case "commonReset":
+                
+                    //Make fake animation of button pressed
+                    common.start.setScale(0.9);
+            case "commonReset":
                 
                     //Reset
                     common.resetTimer();
@@ -211,6 +214,9 @@ class GameScreen: SKScene {
                     
                     switch(name) {
                         case "Start":
+                            //Reset timer
+                            hero.resetTimer();
+                            
                             //Stop timer
                             hero.timer.invalidate();
                             
@@ -305,6 +311,23 @@ class GameScreen: SKScene {
             let name: String = nodee.name!;
             //let locationbuttons = touch.locationInNode(RoundedRect)
 
+            //iterate commons
+            for common in Common {
+                if common.name == nodee.parent?.name! {
+                    switch(name) {
+                    case "commonStart":
+                        
+                        //Make fake animation of button pressed
+                        common.start.setScale(1);
+                    case "commonReset":
+                        
+                        print("7 bed odin rezet");
+                    default:
+                        print("nothing");
+                    }
+                }
+            }
+
             
             //Bring scale of start button to normal size
             for hero in Heroes {
@@ -376,7 +399,7 @@ class GameScreen: SKScene {
     
     
     func commontimer(name: String, previousnode: SKSpriteNode, highborder: Double, highestborder: Double) -> Commons {
-        let testerino = Commons(texture: nil, color: UIColor.whiteColor(), size: CGSizeMake(self.frame.width * 0.98 , icon.frame.height), iconId: name, cooldown: 0.0, highborder: highborder, highestborder: highborder);
+        let testerino = Commons(texture: nil, color: UIColor.whiteColor(), size: CGSizeMake(self.frame.width * 0.98 , icon.frame.height), iconId: name, cooldown: 0.0, highborder: highborder, highestborder: highestborder);
         testerino.position = CGPointMake(self.frame.midX - testerino.frame.width / 2, previousnode.position.y - previousnode.frame.height  - 20);
         testerino.name = name;
         testerino.anchorPoint = CGPointMake(0, 0);
