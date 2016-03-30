@@ -24,10 +24,8 @@ class GameScreen: SKScene {
     var counte: Int = -1000;
     var herocount: Int = 0;
     var count: SKLabelNode!
-    //var tests: SKSpriteNode!
     
     
-    //var testero: Hero!
     var Heroes: Set<Hero> = [];
     var Common: Set<Commons> = [];
     var HeroDB = SimpleDB();
@@ -43,9 +41,9 @@ class GameScreen: SKScene {
     var world: SKSpriteNode!;
     var lowborder: SKSpriteNode!;
     var highborder: SKSpriteNode!;
-    var rightborder: SKSpriteNode!;
     var leftborder: SKSpriteNode!;
-    var sharik: SKSpriteNode!;
+    var nodeborder: CGFloat = 0;
+    
     
     var started: Bool = false;
     var isremoved: Bool = false;
@@ -88,7 +86,7 @@ class GameScreen: SKScene {
 
         //Add camera
         self.camera = cam;
-        cam.setScale(5);
+        cam.setScale(3);
         cam.position = CGPointMake(self.frame.width / 2, self.frame.height / 2);
         
         
@@ -129,6 +127,8 @@ class GameScreen: SKScene {
         start.zPosition = 2;
         world.addChild(start);
         
+        //Count low border
+        nodeborder = nodeborder + start.frame.height + 20;
         
         //Add roshan timer
         let roshan = Commons(texture: nil, color: UIColor.whiteColor(), size: CGSizeMake(self.frame.width * 0.98 , 150), iconId: "roshan", cooldown: 0.0, highborder: 470.0, highestborder: 480.0);
@@ -148,6 +148,9 @@ class GameScreen: SKScene {
         Common.insert(rune);
         world.addChild(rune);
         
+        //Count low border
+        nodeborder = nodeborder + roshan.frame.height + centaur.frame.height + rune.frame.height + 60;
+        
         //Create hero nodes using set from previos scene and SimpleDB
         //2x loop. 1 iterating by Set<String>, second iterating SimpleDB.HeroSet<Character>
         //var herocount: Int = 0;
@@ -162,6 +165,9 @@ class GameScreen: SKScene {
                     character.name = herosDB.name;
                     Heroes.insert(character);
                     world.addChild(character);
+                    
+                    //Count low border
+                    nodeborder = nodeborder + character.frame.height + 20;
                 }
                 
             }
@@ -202,6 +208,13 @@ class GameScreen: SKScene {
         leftborder.physicsBody?.dynamic = false;
         self.addChild(leftborder);
         
+        
+        //Low border check
+        if nodeborder < world.frame.height / 2 {
+            nodeborder = 0;
+        } else {
+            nodeborder = nodeborder - world.frame.height / 2;
+        }
     }
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -514,13 +527,13 @@ class GameScreen: SKScene {
         //Update camera (scroll)
         if (olddelta != delta) {
             world.position.y += -delta!;
-            if (world.position.y - delta!) >= 1920 {
-                world.position.y = 1920;
+            if (world.position.y - delta!) >= nodeborder {
+                world.position.y = nodeborder;
             } else if (world.position.y - delta!) <= 0 {
                 world.position.y = 0;
             }
             olddelta = delta;
-        }
+    }
 }
     
     func commontimer(name: String, previousnode: SKSpriteNode, highborder: Double, highestborder: Double) -> Commons {
