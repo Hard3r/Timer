@@ -10,6 +10,8 @@ import UIKit
 import SpriteKit
 
 class GameViewController: UIViewController {
+    
+    var bool: Bool = false;
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,5 +51,9 @@ class GameViewController: UIViewController {
 
     override func prefersStatusBarHidden() -> Bool {
         return true
+    }
+    
+    func shit() {
+        print("SHIT");
     }
 }

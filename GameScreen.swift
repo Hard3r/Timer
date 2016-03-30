@@ -8,9 +8,10 @@
 
 import Foundation
 import SpriteKit
+import iAd
 
 class GameScreen: SKScene {
-    
+
     var label: SKLabelNode!
     var selectedheroes: Set<String>!
     var cam: SKCameraNode = SKCameraNode()
@@ -45,16 +46,15 @@ class GameScreen: SKScene {
     var nodeborder: CGFloat = 0;
     
     
-    var started: Bool = false;
+    var started: Bool = true;
     var isremoved: Bool = false;
     var scrollup: Bool = false;
     var scrolldown: Bool = false;
     
     let icon = SKSpriteNode(imageNamed: "Tidehunter");
     var oldpos: CGFloat!;
+    var offsetx: Int = 100;
     
-    
-    //var sizee: CGSize!
     
     //Defauls init from superclass
     override init() {
@@ -86,9 +86,8 @@ class GameScreen: SKScene {
 
         //Add camera
         self.camera = cam;
-        cam.setScale(3);
+        //cam.setScale(3);
         cam.position = CGPointMake(self.frame.width / 2, self.frame.height / 2);
-        
         
         //Coords for test
         let x: SKSpriteNode = SKSpriteNode(color: UIColor.blackColor(), size: CGSizeMake(5000, 20));
@@ -128,15 +127,22 @@ class GameScreen: SKScene {
         world.addChild(start);
         
         //Count low border
-        nodeborder = nodeborder + start.frame.height + 20;
+        nodeborder = nodeborder + start.frame.height + 100;
         
         //Add roshan timer
-        let roshan = Commons(texture: nil, color: UIColor.whiteColor(), size: CGSizeMake(self.frame.width * 0.98 , 150), iconId: "roshan", cooldown: 0.0, highborder: 470.0, highestborder: 480.0);
-        roshan.position = CGPointMake(self.frame.midX - roshan.frame.width / 2, start.position.y - start.frame.height - roshan.frame.height / 2 - 20); // задаем позицию.
+        let roshan = Commons(texture: nil, color: UIColor.clearColor(), size: CGSizeMake(self.frame.width * 0.98 , 150), iconId: "roshan", cooldown: 0.0, highborder: 470.0, highestborder: 480.0);
+        roshan.position = CGPointMake(self.frame.midX - roshan.frame.width / 2, start.position.y - start.frame.height - roshan.frame.height / 2 - 100); // задаем позицию.
         roshan.name = "roshan";
         roshan.anchorPoint = CGPointMake(0, 0);
         Common.insert(roshan);
         world.addChild(roshan);
+        
+        //Common timers description
+        let roshanlabel = SKLabelNode(text: "Roshan, neutral stack, rune timers");
+        roshanlabel.fontSize = 60;
+        roshanlabel.position = CGPointMake(world.frame.midX, roshan.frame.height + 30);
+        roshanlabel.name = "commonDescription";
+        roshan.addChild(roshanlabel);
         
         //Add neutral timer
         let centaur = commontimer("centaur", previousnode: roshan, highborder: 40.0, highestborder: 60);
@@ -149,7 +155,15 @@ class GameScreen: SKScene {
         world.addChild(rune);
         
         //Count low border
-        nodeborder = nodeborder + roshan.frame.height + centaur.frame.height + rune.frame.height + 60;
+        nodeborder = nodeborder + roshan.frame.height + centaur.frame.height + rune.frame.height + 20 * 2 + CGFloat(offsetx) * 3;
+        
+        //Common timers description
+        let herolabel = SKLabelNode(text: "Hero timers");
+        herolabel.fontSize = 60;
+        herolabel.position = CGPointMake(world.frame.midX, -70);
+        herolabel.name = "HeroDescription";
+        rune.addChild(herolabel);
+        
         
         //Create hero nodes using set from previos scene and SimpleDB
         //2x loop. 1 iterating by Set<String>, second iterating SimpleDB.HeroSet<Character>
@@ -161,13 +175,13 @@ class GameScreen: SKScene {
                         size: CGSizeMake(self.frame.width * 0.98, icon.frame.height * 2),
                         hero: herosDB);
                     
-                    character.position = CGPointMake((self.frame.width - character.frame.width) / 2, (rune.position.y - rune.frame.height - character.frame.height / 2 - 20) - (character.frame.height + 20) * CGFloat(herocount));
+                    character.position = CGPointMake((self.frame.width - character.frame.width) / 2, (rune.position.y - rune.frame.height - character.frame.height / 2 - CGFloat(offsetx)) - (character.frame.height + CGFloat(offsetx)) * CGFloat(herocount));
                     character.name = herosDB.name;
                     Heroes.insert(character);
                     world.addChild(character);
                     
                     //Count low border
-                    nodeborder = nodeborder + character.frame.height + 20;
+                    nodeborder = nodeborder + character.frame.height + CGFloat(offsetx);
                 }
                 
             }
@@ -208,7 +222,7 @@ class GameScreen: SKScene {
         leftborder.physicsBody?.dynamic = false;
         self.addChild(leftborder);
         
-        
+        print(nodeborder);
         //Low border check
         if nodeborder < world.frame.height / 2 {
             nodeborder = 0;
@@ -269,6 +283,9 @@ class GameScreen: SKScene {
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         for touch: AnyObject in touches {
+            
+            //Stop mooving node
+            started = false;
             
             let location = touch.locationInNode(self);
             let nodee = self.nodeAtPoint(location);//.parent! as! Hero
@@ -407,6 +424,9 @@ class GameScreen: SKScene {
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         for touch: AnyObject in touches {
             
+            //Start Node movement to default position
+            started = true;
+            
             let location = touch.locationInNode(self);
             let nodee = self.nodeAtPoint(location);
             let name: String = nodee.name!;
@@ -457,11 +477,13 @@ class GameScreen: SKScene {
                 
                 
                 //Movement of node
+                if started {
                 if hero.position.x > (self.frame.width - hero.frame.width) / 2 {
                         hero.position.x -= 5;
                 } else if hero.position.x - 5 <= (self.frame.width - hero.frame.width) / 2 {
                         hero.position.x = (self.frame.width - hero.frame.width) / 2;
                     }
+                }
                 
                 //Delete node
                 if hero.position.x > self.frame.midX {
@@ -538,11 +560,20 @@ class GameScreen: SKScene {
     
     func commontimer(name: String, previousnode: SKSpriteNode, highborder: Double, highestborder: Double) -> Commons {
         let testerino = Commons(texture: nil, color: UIColor.whiteColor(), size: CGSizeMake(self.frame.width * 0.98 , icon.frame.height), iconId: name, cooldown: 0.0, highborder: highborder, highestborder: highestborder);
-        testerino.position = CGPointMake(self.frame.midX - testerino.frame.width / 2, previousnode.position.y - previousnode.frame.height  - 20);
+        testerino.position = CGPointMake(self.frame.midX - testerino.frame.width / 2, previousnode.position.y - previousnode.frame.height - 20);
         testerino.name = name;
         testerino.anchorPoint = CGPointMake(0, 0);
         
         return testerino;
+    }
+    
+    
+    func label(name: String) -> SKLabelNode {
+        let label = SKLabelNode();
+        label.name = name;
+        label.fontColor = UIColor.whiteColor();
+        label.fontSize = 45;
+        return label;
     }
 }
 

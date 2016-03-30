@@ -84,12 +84,14 @@ class Commons: SKSpriteNode {
         start.name = "commonStart";
         self.addChild(start);
         
+        //Reset
         reset = SKSpriteNode(imageNamed: "info");
         reset.size = CGSizeMake((self.frame.width - icon.frame.width) / 3, icon.frame.height);
         reset.position = CGPointMake(labelframe.position.x + labelframe.frame.width + start.frame.width, 0);
         reset.anchorPoint = CGPointMake(0, 0);
         reset.name = "commonReset";
         self.addChild(reset);
+        
             }
     
     func update() {
