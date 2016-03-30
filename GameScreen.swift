@@ -20,8 +20,8 @@ class GameScreen: SKScene {
     var olddelta:CGFloat? = 0;
     var oldxdelta:CGFloat? = 0;
     var RoundedRect:SKSpriteNode!
-    var counts: Int = 1;
-    var counte: Int = 60;
+    var counts: Int = 1000;
+    var counte: Int = -1000;
     var herocount: Int = 0;
     var count: SKLabelNode!
     //var tests: SKSpriteNode!
@@ -40,8 +40,17 @@ class GameScreen: SKScene {
     var aghanim:SKSpriteNode!;
     var start:SKSpriteNode!;
     var reset:SKSpriteNode!;
+    var world: SKSpriteNode!;
+    var lowborder: SKSpriteNode!;
+    var highborder: SKSpriteNode!;
+    var rightborder: SKSpriteNode!;
+    var leftborder: SKSpriteNode!;
+    var sharik: SKSpriteNode!;
+    
     var started: Bool = false;
     var isremoved: Bool = false;
+    var scrollup: Bool = false;
+    var scrolldown: Bool = false;
     
     let icon = SKSpriteNode(imageNamed: "Tidehunter");
     var oldpos: CGFloat!;
@@ -74,19 +83,51 @@ class GameScreen: SKScene {
             print(test);
         }
         
-        backgroundColor = SKColor.grayColor();
+        backgroundColor = SKColor.whiteColor();
         self.name = "Main";
 
         //Add camera
         self.camera = cam;
+        cam.setScale(5);
         cam.position = CGPointMake(self.frame.width / 2, self.frame.height / 2);
         
+        
+        //Coords for test
+        let x: SKSpriteNode = SKSpriteNode(color: UIColor.blackColor(), size: CGSizeMake(5000, 20));
+        x.position = CGPointMake(0, 0);
+        x.name = "x";
+        self.addChild(x);
+        
+        let y: SKSpriteNode = SKSpriteNode(color: UIColor.blackColor(), size: CGSizeMake(20, 5000));
+        y.position = CGPointMake(0, 0);
+        y.name = "y";
+        self.addChild(y);
+        
+        
+        //Add world
+        world = SKSpriteNode(color: UIColor.grayColor(), size: CGSizeMake(self.frame.width, self.frame.height * 2));
+        world.zPosition = 0;
+        world.position = CGPointMake(0, 0);
+        world.anchorPoint = CGPointMake(0, 0.5);
+        world.name = "World";
+        world.physicsBody = SKPhysicsBody(rectangleOfSize: CGSizeMake(world.frame.width, world.frame.height), center: CGPointMake(world.frame.midX, world.frame.midY));
+        world.physicsBody?.affectedByGravity = false;
+        world.physicsBody?.allowsRotation = false;
+        world.physicsBody?.dynamic = false;
+        world.physicsBody?.restitution = 0.1;
+        world.physicsBody?.velocity = CGVectorMake(0, 0);
+        world.physicsBody?.mass = 10000;
+        world.physicsBody?.friction = 0;
+        self.addChild(world);
+        
+        
         //Like back button frame;
-        start = SKSpriteNode(color: UIColor.whiteColor(), size: CGSizeMake(self.frame.width, icon.frame.height / 2));
+        start = SKSpriteNode(color: UIColor.redColor(), size: CGSizeMake(self.frame.width, icon.frame.height / 2));
         start.anchorPoint = CGPointMake(0, 0);
-        start.position = CGPointMake(0, self.frame.maxY - start.frame.height);
+        start.position = CGPointMake(0, world.frame.maxY - start.frame.height);
         start.name = "Menuframe";
-        self.addChild(start);
+        start.zPosition = 2;
+        world.addChild(start);
         
         
         //Add roshan timer
@@ -95,17 +136,17 @@ class GameScreen: SKScene {
         roshan.name = "roshan";
         roshan.anchorPoint = CGPointMake(0, 0);
         Common.insert(roshan);
-        self.addChild(roshan);
+        world.addChild(roshan);
         
         //Add neutral timer
         let centaur = commontimer("centaur", previousnode: roshan, highborder: 40.0, highestborder: 60);
         Common.insert(centaur);
-        self.addChild(centaur);
+        world.addChild(centaur);
         
         //Add rune timer
         rune = commontimer("rune", previousnode: centaur, highborder: 110.0, highestborder: 120.0);
         Common.insert(rune);
-        self.addChild(rune);
+        world.addChild(rune);
         
         //Create hero nodes using set from previos scene and SimpleDB
         //2x loop. 1 iterating by Set<String>, second iterating SimpleDB.HeroSet<Character>
@@ -120,7 +161,7 @@ class GameScreen: SKScene {
                     character.position = CGPointMake((self.frame.width - character.frame.width) / 2, (rune.position.y - rune.frame.height - character.frame.height / 2 - 20) - (character.frame.height + 20) * CGFloat(herocount));
                     character.name = herosDB.name;
                     Heroes.insert(character);
-                    self.addChild(character);
+                    world.addChild(character);
                 }
                 
             }
@@ -128,6 +169,38 @@ class GameScreen: SKScene {
         }
         
         herocount = 0;
+        
+        
+        //High border for World node
+        highborder = SKSpriteNode(color: UIColor.blackColor(), size: CGSizeMake(self.frame.width, 30));
+        highborder.anchorPoint = CGPointMake(0.5, 0.5);
+        highborder.position = CGPointMake(0, world.frame.maxY + world.frame.height / 2);
+        highborder.name = "Highborder";
+        highborder.physicsBody = SKPhysicsBody(rectangleOfSize: CGSizeMake(highborder.frame.width, highborder.frame.height));
+        highborder.physicsBody?.affectedByGravity = false;
+        highborder.physicsBody?.dynamic = false;
+        self.addChild(highborder);
+        
+        
+        //Low border for World node
+        lowborder = SKSpriteNode(color: UIColor.blackColor(), size: CGSizeMake(self.frame.width, 30));
+        lowborder.anchorPoint = CGPointMake(0.5, 0.5);
+        lowborder.position = CGPointMake(lowborder.frame.width / 2, world.frame.minY - lowborder.frame.height / 2);
+        lowborder.name = "Lowborder";
+        lowborder.physicsBody = SKPhysicsBody(rectangleOfSize: CGSizeMake(lowborder.frame.width, lowborder.frame.height));
+        lowborder.physicsBody?.affectedByGravity = false;
+        lowborder.physicsBody?.dynamic = false;
+        self.addChild(lowborder);
+    
+        //left border for World node
+        leftborder = SKSpriteNode(color: UIColor.blackColor(), size: CGSizeMake(30, world.frame.height * 2));
+        leftborder.anchorPoint = CGPointMake(0.5, 0.5);
+        leftborder.position = CGPointMake(-leftborder.frame.width / 2, world.frame.minY);
+        leftborder.name = "Leftborder";
+        leftborder.physicsBody = SKPhysicsBody(rectangleOfSize: CGSizeMake(leftborder.frame.width, leftborder.frame.height));
+        leftborder.physicsBody?.affectedByGravity = false;
+        leftborder.physicsBody?.dynamic = false;
+        self.addChild(leftborder);
         
     }
     
@@ -139,6 +212,14 @@ class GameScreen: SKScene {
             let start = touch.locationInNode(self);
             let previousLocation = touch.previousLocationInNode(self);
             delta = start.y - previousLocation.y;
+            
+            //Chek for scrool world up or down
+            if start.y > previousLocation.y {
+                scrollup = true;
+            } else if start.y < previousLocation.y {
+                scrolldown = true;
+            }
+            
             print("\(start.x)", "\(start.y)");
             
             //Check touch location and previos touch location
@@ -148,6 +229,7 @@ class GameScreen: SKScene {
             let nodee = self.nodeAtPoint(xstart);//.parent! as! Hero
             let name: String = nodee.name!;
             
+            //Delta changes if icon or skill node is touched only
             if name == "Icon" || name == "Skill" {
                 xdelta = start.x - previousLocation.x;
             }
@@ -157,12 +239,16 @@ class GameScreen: SKScene {
                 //if hero.name == node.name {
                 if hero.name == nodee.parent?.name! {
                     if (xstart.x != xpreviosloc.x) {
+                        
+                        //Block y delta
                         delta = 0;
+                        
+                        //Start moving node by x
                         hero.position.x += xdelta;
 
-                    } else { xdelta = 0; }
-                    
-                    
+                    } else {
+                        xdelta = 0;
+                    }
                 }
             }
         }
@@ -175,7 +261,7 @@ class GameScreen: SKScene {
             let nodee = self.nodeAtPoint(location);//.parent! as! Hero
             let name: String = nodee.name!;
             print(nodee.name!);
-            
+    
             //iterate commons
             for common in Common {
                 if common.name == nodee.parent?.name! {
@@ -200,6 +286,9 @@ class GameScreen: SKScene {
                 
                     //Reset
                     common.resetTimer();
+                case "World":
+                    print("WOLD");
+                
             default:
                 print("nothing");
                     }
@@ -296,7 +385,6 @@ class GameScreen: SKScene {
                     default:
                         print("Try again")
                     }
-                    
                 }
             }
 
@@ -346,6 +434,7 @@ class GameScreen: SKScene {
         }
     }
     
+    var lastupdated: NSTimeInterval = 0;
     
     override func update(currentTime: NSTimeInterval) {
         
@@ -374,6 +463,9 @@ class GameScreen: SKScene {
                     common.update();
                 }
         
+        
+        //Check for deleting one of the nodes
+        //And redraw other nodes
         if isremoved {
             
             for (hero) in Heroes {
@@ -382,21 +474,54 @@ class GameScreen: SKScene {
             }
             isremoved = false;
         }
-   
+      
+        /*
+   if (olddelta != delta) {
+    
+    world.physicsBody?.dynamic = true;
+    world.physicsBody?.applyImpulse(CGVectorMake(0, delta! + 10000));
+    started = true;
+   }
+    
+        olddelta = delta;
+
+        
+        if started && scrollup {
+            world.physicsBody?.velocity = CGVectorMake(0, CGFloat(counts));
+            counts--;
+        }
+        
+       if started && scrolldown {
+            world.physicsBody?.velocity = CGVectorMake(0, CGFloat(counte));
+            counte++;
+        }
+        
+        if counts < 0 {
+            world.physicsBody?.dynamic = false;
+            counts = 500;
+            started = false;
+            scrollup = false;
+        }
+        
+        else if counte > 0 {
+            world.physicsBody?.dynamic = false;
+            counte = -500;
+            started = false;
+            scrolldown = false;
+        }
+*/
+       
         //Update camera (scroll)
         if (olddelta != delta) {
-            if (cam.position.y - delta!) >= self.frame.midY {
-                
-                cam.position.y = self.frame.midY;
-            } else if (cam.position.y - delta!) <= -1000 {
-                cam.position.y = -1000;
-                } else {
-                cam.position.y += -delta!; }
-            
-                    olddelta = delta;
+            world.position.y += -delta!;
+            if (world.position.y - delta!) >= 1920 {
+                world.position.y = 1920;
+            } else if (world.position.y - delta!) <= 0 {
+                world.position.y = 0;
+            }
+            olddelta = delta;
         }
-    }
-    
+}
     
     func commontimer(name: String, previousnode: SKSpriteNode, highborder: Double, highestborder: Double) -> Commons {
         let testerino = Commons(texture: nil, color: UIColor.whiteColor(), size: CGSizeMake(self.frame.width * 0.98 , icon.frame.height), iconId: name, cooldown: 0.0, highborder: highborder, highestborder: highestborder);
