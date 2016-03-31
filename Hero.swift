@@ -116,104 +116,112 @@ class Hero: SKSpriteNode {
         
         
         //Timer
-        labelframe = SKSpriteNode(color: UIColor.blackColor(), size: CGSizeMake((self.frame.width - icon.frame.width) / 7, icon.frame.height))
-        labelframe.anchorPoint = CGPointMake(0, 0)
-        labelframe.position = CGPointMake(icon.position.x + icon.frame.width, icon.frame.height)
+        labelframe = SKSpriteNode(color: UIColor.blackColor(), size: CGSizeMake((self.frame.width - icon.frame.width) / 7, icon.frame.height));
+        labelframe.anchorPoint = CGPointMake(0, 0);
+        labelframe.position = CGPointMake(icon.position.x + icon.frame.width, icon.frame.height);
         labelframe.name = "Labelframe";
-        self.addChild(labelframe)
-        label = SKLabelNode(text: "\(lvl6)")
-        label.name = "Timer"
-        label.fontSize = 50
-        label.fontName = "AlNile-Bold"
-        label.position = CGPointMake(labelframe.frame.width / 2, labelframe.frame.height / 2 - label.frame.height / 2)
-        labelframe.addChild(label)
+        self.addChild(labelframe);
+        label = SKLabelNode(text: "\(lvl6)");
+        label.name = "Timer";
+        label.fontSize = 30;
+        label.fontName = "Optima-ExtraBlack";
+        label.position = CGPointMake(labelframe.frame.width / 2, labelframe.frame.height / 2 - label.frame.height / 2);
+        labelframe.addChild(label);
         
         
         //Agha
-        scepter = SKSpriteNode(color: UIColor.redColor(), size: CGSizeMake((self.frame.width - icon.frame.width) / 6, icon.frame.height))
-        scepter.anchorPoint = CGPointMake(0, 0)
-        scepter.name = "Aghanim"
-        scepter.position = CGPointMake(icon.frame.width + labelframe.frame.width, icon.frame.height)
+        scepter = SKSpriteNode(color: UIColor.redColor(), size: CGSizeMake((self.frame.width - icon.frame.width) / 6, icon.frame.height));
+        scepter.texture = SKTexture(imageNamed: "Aghanim");
+        scepter.anchorPoint = CGPointMake(0, 0);
+        scepter.name = "Aghanim";
+        scepter.position = CGPointMake(icon.frame.width + labelframe.frame.width, icon.frame.height);
         
         //Octarine
-        core = SKSpriteNode(color: UIColor.blueColor(), size: CGSizeMake((self.frame.width - icon.frame.width) / 6, icon.frame.height))
-        core.anchorPoint = CGPointMake(0, 0)
-        core.name = "Octarine"
-        core.position = CGPointMake(scepter.position.x + scepter.frame.width, icon.frame.height)
+        core = SKSpriteNode(color: UIColor.blueColor(), size: CGSizeMake((self.frame.width - icon.frame.width) / 6, icon.frame.height));
+        core.anchorPoint = CGPointMake(0, 0);
+        core.texture = SKTexture(imageNamed: "octarine");
+        core.name = "Octarine";
+        core.position = CGPointMake(scepter.position.x + scepter.frame.width, icon.frame.height);
         
         //Start timer button
-        start = SKSpriteNode(imageNamed: "startbutt")
-        start.size = CGSizeMake((self.frame.width - icon.frame.width) / 3, icon.frame.height)
-        start.position = CGPointMake(core.position.x + core.frame.width, icon.frame.height)
-        start.anchorPoint = CGPointMake(0, 0)
-        start.name = "Start"
+        start = SKSpriteNode(imageNamed: "startbutt");
+        start.size = CGSizeMake((self.frame.width - icon.frame.width) / 3, icon.frame.height);
+        start.texture = SKTexture(imageNamed: "Start");
+        start.position = CGPointMake(core.position.x + core.frame.width + start.frame.width / 2, icon.frame.height + start.frame.height / 2);
+        start.anchorPoint = CGPointMake(0.5, 0.5);
+        start.name = "Start";
         
         //Reset timer button
-        reset = SKSpriteNode(imageNamed: "info")
-        reset.size = CGSizeMake((self.frame.width - icon.frame.width) / 5, icon.frame.height)
-        reset.position = CGPointMake(start.position.x + start.frame.width - 10, icon.frame.height)
-        reset.anchorPoint = CGPointMake(0, 0)
-        reset.name = "Reset"
+        reset = SKSpriteNode(imageNamed: "info");
+        reset.texture = SKTexture(imageNamed: "Reset");
+        reset.size = CGSizeMake((self.frame.width - icon.frame.width) / 5, icon.frame.height);
+        reset.position = CGPointMake(start.position.x + start.frame.width / 2 + reset.frame.width / 2 - 5, icon.frame.height + reset.frame.height / 2);
+        reset.anchorPoint = CGPointMake(0.5, 0.5);
+        reset.name = "Reset";
         
         
         //Check for aghanim
         if aghanim {
-            self.addChild(scepter)
-            self.addChild(core)
-            self.addChild(start)
-            self.addChild(reset)
+            self.addChild(scepter);
+            self.addChild(core);
+            self.addChild(start);
+            self.addChild(reset);
         } else {
-            core.size = CGSizeMake((self.frame.width - icon.frame.width - label.frame.width) / 5, icon.frame.height)
+            core.size = CGSizeMake((self.frame.width - icon.frame.width - labelframe.frame.width) / 5, icon.frame.height)
             core.position = CGPointMake(labelframe.position.x + labelframe.frame.width, icon.frame.height)
             self.addChild(core)
-            start.size = CGSizeMake((self.frame.width - icon.frame.width - label.frame.width) / 2, icon.frame.height)
-            start.position = CGPointMake(core.position.x + core.frame.width, icon.frame.height)
+            start.size = CGSizeMake((self.frame.width - icon.frame.width - labelframe.frame.width - core.frame.width) / 2, icon.frame.height)
+            start.position = CGPointMake(core.position.x + core.frame.width + start.frame.width / 2, icon.frame.height + start.frame.height / 2)
             self.addChild(start)
-            reset.size = CGSizeMake((self.frame.width - icon.frame.width - label.frame.width) / 5, icon.frame.height)
-            reset.position = CGPointMake(start.position.x + start.frame.width, icon.frame.height)
+            reset.size = CGSizeMake((self.frame.width - icon.frame.width - labelframe.frame.width - core.frame.width) / 2, icon.frame.height)
+            reset.position = CGPointMake(start.position.x + start.frame.width, icon.frame.height + start.frame.height / 2)
             self.addChild(reset)
         }
         
         //Skill sprite
         let skilltexture: String = "skill_" + iconID;
-        skill = SKSpriteNode(imageNamed: skilltexture)
-        skill.size = CGSizeMake(icon.frame.width, icon.frame.height)
+        skill = SKSpriteNode(imageNamed: skilltexture);
+        skill.size = CGSizeMake(icon.frame.width, icon.frame.height);
         
         //Frame for 3 lvl buttons
-        levelframe = SKSpriteNode(color: UIColor.clearColor(), size: CGSizeMake(self.frame.width, icon.frame.height))
-        levelframe.anchorPoint = CGPointMake(0, 0)
-        levelframe.position = CGPointMake(0, 0)
-        levelframe.name = "Levelframe"
+        levelframe = SKSpriteNode(color: UIColor.clearColor(), size: CGSizeMake(self.frame.width, icon.frame.height));
+        levelframe.anchorPoint = CGPointMake(0, 0);
+        levelframe.position = CGPointMake(0, 0);
+        levelframe.name = "Levelframe";
         //self.addChild(levelframe)
         
         
-        skill.anchorPoint = CGPointMake(0, 0)
-        skill.position = CGPointMake(0, 0)
-        skill.name = "Skill"
-        self.addChild(skill)
+        skill.anchorPoint = CGPointMake(0, 0);
+        skill.position = CGPointMake(0, 0);
+        skill.name = "Skill";
+        self.addChild(skill);
         
-        level6 = SKSpriteNode(color: UIColor.whiteColor(), size: CGSizeMake((levelframe.size.width - skill.frame.width) / 3, levelframe.size.height))
-        level6.anchorPoint = CGPointMake(0, 0)
-        level6.position = CGPointMake(skill.position.x + skill.frame.width, 0)
-        level6.name = "Level6"
-        self.addChild(level6)
+        level6 = SKSpriteNode(color: UIColor.whiteColor(), size: CGSizeMake((levelframe.size.width - skill.frame.width) / 3, levelframe.size.height));
+        level6.anchorPoint = CGPointMake(0, 0);
+        level6.texture = SKTexture(imageNamed: "Play");
+        level6.position = CGPointMake(skill.position.x + skill.frame.width, 0);
+        level6.name = "Level6";
+        self.addChild(level6);
         
-        level11 = SKSpriteNode(color: UIColor.redColor(), size: CGSizeMake((levelframe.size.width - skill.frame.width) / 3, levelframe.size.height))
-        level11.anchorPoint = CGPointMake(0, 0)
-        level11.position = CGPointMake(level6.position.x + level6.frame.width, 0)
-        level11.name = "Level11"
-        self.addChild(level11)
+        level11 = SKSpriteNode(color: UIColor.redColor(), size: CGSizeMake((levelframe.size.width - skill.frame.width) / 3, levelframe.size.height));
+        level11.anchorPoint = CGPointMake(0, 0);
+        level11.texture = SKTexture(imageNamed: "Play");
+        level11.position = CGPointMake(level6.position.x + level6.frame.width, 0);
+        level11.name = "Level11";
+        self.addChild(level11);
         
-        level16 = SKSpriteNode(color: UIColor.blueColor(), size: CGSizeMake((levelframe.size.width - skill.frame.width) / 3, levelframe.size.height))
-        level16.anchorPoint = CGPointMake(0, 0)
-        level16.position = CGPointMake(level11.position.x + level11.frame.width, 0)
-        level16.name = "Level16"
-        self.addChild(level16)
+        level16 = SKSpriteNode(color: UIColor.blueColor(), size: CGSizeMake((levelframe.size.width - skill.frame.width) / 3, levelframe.size.height));
+        level16.anchorPoint = CGPointMake(0, 0);
+        level16.texture = SKTexture(imageNamed: "Play");
+        level16.position = CGPointMake(level11.position.x + level11.frame.width, 0);
+        level16.name = "Level16";
+        self.addChild(level16);
 
         
         readyspell = SKSpriteNode(color: UIColor.blackColor(), size: CGSizeMake(80, 80));
         readyspell.position = CGPointMake(skill.frame.midX, skill.frame.midY);
         readyspell.name = "Ready";
+        readyspell.texture = SKTexture(imageNamed: "accept");
         readyspell.zPosition = 10;
         readyspell.alpha = 0;
         skill.addChild(readyspell);

@@ -34,7 +34,7 @@ class GameScreen: SKScene {
     var node2: SKNode!;
     var rune: Commons!;
 
-    
+    var back: SKSpriteNode!;
     var timer:SKSpriteNode!;
     var aghanim:SKSpriteNode!;
     var start:SKSpriteNode!;
@@ -115,16 +115,25 @@ class GameScreen: SKScene {
         world.physicsBody?.velocity = CGVectorMake(0, 0);
         world.physicsBody?.mass = 10000;
         world.physicsBody?.friction = 0;
+        world.texture = SKTexture(imageNamed: "Background");
         self.addChild(world);
-        
         
         //Like back button frame;
         start = SKSpriteNode(color: UIColor.redColor(), size: CGSizeMake(self.frame.width, icon.frame.height / 2));
         start.anchorPoint = CGPointMake(0, 0);
         start.position = CGPointMake(0, world.frame.maxY - start.frame.height);
         start.name = "Menuframe";
-        start.zPosition = 2;
+        start.texture = SKTexture(imageNamed: "Menu");
+        start.zPosition = 1;
         world.addChild(start);
+        
+        //Back button
+        back = SKSpriteNode(color: UIColor.clearColor(), size: CGSizeMake(start.frame.height * 0.95, start.frame.height * 0.95));
+        back.position = CGPointMake(back.frame.width / 2 + 10, back.frame.height / 2 + 10);
+        back.name = "Back";
+        back.zPosition = 2;
+        back.texture = SKTexture(imageNamed: "Back");
+        start.addChild(back);
         
         //Count low border
         nodeborder = nodeborder + start.frame.height + 100;
@@ -134,6 +143,7 @@ class GameScreen: SKScene {
         roshan.position = CGPointMake(self.frame.midX - roshan.frame.width / 2, start.position.y - start.frame.height - roshan.frame.height / 2 - 100); // задаем позицию.
         roshan.name = "roshan";
         roshan.anchorPoint = CGPointMake(0, 0);
+        roshan.zPosition = 1;
         Common.insert(roshan);
         world.addChild(roshan);
         
@@ -142,15 +152,19 @@ class GameScreen: SKScene {
         roshanlabel.fontSize = 60;
         roshanlabel.position = CGPointMake(world.frame.midX, roshan.frame.height + 30);
         roshanlabel.name = "commonDescription";
+        roshanlabel.fontName = "Optima-ExtraBlack";
+        roshanlabel.zPosition = 1;
         roshan.addChild(roshanlabel);
         
         //Add neutral timer
         let centaur = commontimer("centaur", previousnode: roshan, highborder: 40.0, highestborder: 60);
+        centaur.zPosition = 1;
         Common.insert(centaur);
         world.addChild(centaur);
         
         //Add rune timer
         rune = commontimer("rune", previousnode: centaur, highborder: 110.0, highestborder: 120.0);
+        rune.zPosition = 1;
         Common.insert(rune);
         world.addChild(rune);
         
@@ -159,9 +173,11 @@ class GameScreen: SKScene {
         
         //Common timers description
         let herolabel = SKLabelNode(text: "Hero timers");
+        herolabel.zPosition = 1;
         herolabel.fontSize = 60;
         herolabel.position = CGPointMake(world.frame.midX, -70);
         herolabel.name = "HeroDescription";
+        herolabel.fontName = "Optima-ExtraBlack";
         rune.addChild(herolabel);
         
         
@@ -171,17 +187,18 @@ class GameScreen: SKScene {
         for heros in selectedheroes {
             for herosDB in HeroDB.HeroSet {
                 if heros == herosDB.name {
-                    let character = Hero(texture: nil, color: UIColor.whiteColor(),
+                    let character = Hero(texture: nil, color: UIColor.clearColor(),
                         size: CGSizeMake(self.frame.width * 0.98, icon.frame.height * 2),
                         hero: herosDB);
                     
                     character.position = CGPointMake((self.frame.width - character.frame.width) / 2, (rune.position.y - rune.frame.height - character.frame.height / 2 - CGFloat(offsetx)) - (character.frame.height + CGFloat(offsetx)) * CGFloat(herocount));
                     character.name = herosDB.name;
+                    character.zPosition = 1;
                     Heroes.insert(character);
                     world.addChild(character);
                     
                     //Count low border
-                    nodeborder = nodeborder + character.frame.height + CGFloat(offsetx);
+                    nodeborder = nodeborder + character.frame.height + CGFloat(offsetx) * 2;
                 }
                 
             }
@@ -290,6 +307,7 @@ class GameScreen: SKScene {
             //Stop mooving node
             started = false;
             
+            
             let location = touch.locationInNode(self);
             let nodee = self.nodeAtPoint(location);//.parent! as! Hero
             let name: String = nodee.name!;
@@ -328,95 +346,23 @@ class GameScreen: SKScene {
                 }
             }
             
-            //iterate hero nodes on scene
-            //check name of pressed node equal it to set of existing nodes
-            for hero in Heroes {
-                //if hero.name == node.name {
-                if hero.name == nodee.parent?.name! {
-                    
-                    switch(name) {
+            if scrolldown {
+                
+                //iterate hero nodes on scene
+                //check name of pressed node equal it to set of existing nodes
+                for hero in Heroes {
+                    //if hero.name == node.name {
+                    if hero.name == nodee.parent?.name! {
+                        
+                        switch(name) {
                         case "Start":
-                            //Reset timer
-                            hero.resetTimer();
-                            
-                            //Stop timer
-                            hero.timer.invalidate();
-                            
-                            //Start timer
-                            hero.testtimer();
-                            
-                            //Stop updating
-                            hero.isStarted = false;
-                            
                             //Change scale to make pressed button effect
                             hero.start.setScale(0.9);
                         case "Reset":
-                            
-                            //Reset timer
-                            hero.resetTimer();
-                        
-                        case "Aghanim":
-                            hero.timer.invalidate();
-                            
-                            hero.aghanimpressed = !hero.aghanimpressed
-                            if hero.scepter.alpha == 0.5 {
-                                hero.scepter.alpha = 1;
-                            } else { hero.scepter.alpha = 0.5; }
-                        
-                        case "Octarine":
-                            hero.timer.invalidate();
-                            
-                            hero.octarine = !hero.octarine;
-                            hero.octarinepressed = !hero.octarinepressed;
-                            
-                            switch(hero.octarinepressed) {
-                                case true:
-                                    hero.octarinechange();
-                                case false:
-                                    hero.octarineback();
-                            }
-                            
-                            if hero.core.alpha == 0.5 {
-                                hero.core.alpha = 1;
-                            } else { hero.core.alpha = 0.5; }
-                        
-                        case "Level6":
-                            //Reset timer
-                            hero.resetTimer();
-                            
-                            hero.lvl6pressed = true;
-                            hero.lvl11pressed = false;
-                            hero.lvl16pressed = false;
-                            hero.level6.alpha = 0.5;
-                            hero.level11.alpha = 1;
-                            hero.level16.alpha = 1;
-
-                        case "Level11":
-                            //Reset timer
-                            hero.resetTimer();
-                            
-                            hero.lvl6pressed = false;
-                            hero.lvl11pressed = true;
-                            hero.lvl16pressed = false;
-                            hero.level6.alpha = 1;
-                            hero.level11.alpha = 0.5;
-                            hero.level16.alpha = 1;
-
-                        
-                        case "Level16":
-                            //Reset timer
-                            hero.resetTimer();
-                            
-                            hero.lvl6pressed = false;
-                            hero.lvl11pressed = false;
-                            hero.lvl16pressed = true;
-                            hero.level6.alpha = 1;
-                            hero.level11.alpha = 1;
-                            hero.level16.alpha = 0.5;
-
-                        
-                    default:
-                        print("Try again")
+                            hero.reset.setScale(0.9);
+                            default:
+                            print("Try again")
+                        }
                     }
                 }
             }
@@ -429,7 +375,6 @@ class GameScreen: SKScene {
             
             //Start Node movement to default position
             started = true;
-            scrolldown = true;
             
             
             let location = touch.locationInNode(self);
@@ -453,27 +398,117 @@ class GameScreen: SKScene {
                     }
                 }
             }
-
             
-            //Bring scale of start button to normal size
+            if scrolldown {
+            
+            //iterate hero nodes on scene
+            //check name of pressed node equal it to set of existing nodes
             for hero in Heroes {
                 //if hero.name == node.name {
                 if hero.name == nodee.parent?.name! {
-        
-            switch(name) {
-            case "Start":
-                hero.start.setScale(1);
-            
-            default:
-                print("Try again")
+                    
+                    switch(name) {
+                    case "Start":
+                        //Reset timer
+                        hero.resetTimer();
+                        
+                        //Stop timer
+                        hero.timer.invalidate();
+                        
+                        //Start timer
+                        hero.testtimer();
+                        
+                        //Stop updating
+                        hero.isStarted = false;
+                        
+                        //Change scale to make pressed button effect
+                        hero.start.setScale(1);
+                    case "Reset":
+                        
+                        //Reset timer
+                        hero.resetTimer();
+                        
+                        //Reset push effect
+                        hero.reset.setScale(1);
+                        
+                    case "Aghanim":
+                        hero.timer.invalidate();
+                        
+                        hero.aghanimpressed = !hero.aghanimpressed
+                        if hero.scepter.alpha == 0.5 {
+                            hero.scepter.alpha = 1;
+                        } else { hero.scepter.alpha = 0.5; }
+                        
+                    case "Octarine":
+                        hero.timer.invalidate();
+                        
+                        hero.octarine = !hero.octarine;
+                        hero.octarinepressed = !hero.octarinepressed;
+                        
+                        switch(hero.octarinepressed) {
+                        case true:
+                            hero.octarinechange();
+                        case false:
+                            hero.octarineback();
+                        }
+                        
+                        if hero.core.alpha == 0.5 {
+                            hero.core.alpha = 1;
+                        } else { hero.core.alpha = 0.5; }
+                        
+                    case "Level6":
+                        //Reset timer
+                        hero.resetTimer();
+                        
+                        hero.lvl6pressed = true;
+                        hero.lvl11pressed = false;
+                        hero.lvl16pressed = false;
+                        hero.level6.alpha = 0.5;
+                        hero.level11.alpha = 1;
+                        hero.level16.alpha = 1;
+                        
+                    case "Level11":
+                        //Reset timer
+                        hero.resetTimer();
+                        
+                        hero.lvl6pressed = false;
+                        hero.lvl11pressed = true;
+                        hero.lvl16pressed = false;
+                        hero.level6.alpha = 1;
+                        hero.level11.alpha = 0.5;
+                        hero.level16.alpha = 1;
+                        
+                        
+                    case "Level16":
+                        //Reset timer
+                        hero.resetTimer();
+                        
+                        hero.lvl6pressed = false;
+                        hero.lvl11pressed = false;
+                        hero.lvl16pressed = true;
+                        hero.level6.alpha = 1;
+                        hero.level11.alpha = 1;
+                        hero.level16.alpha = 0.5;
+                        
+                        
+                    default:
+                        print("Try again")
                     }
                 }
             }
         }
     }
-    
+        scrolldown = true;
+        
+        for hero in Heroes {
+            hero.start.setScale(1);
+            hero.reset.setScale(1);
+        }
+
+}
+
     var lastupdated: NSTimeInterval = 0;
-    
+
     override func update(currentTime: NSTimeInterval) {
         
         
@@ -524,8 +559,8 @@ class GameScreen: SKScene {
         }
        
      
-            if (world.position.y - delta!) >= 1920 {
-                world.position.y = 1920;
+            if (world.position.y - delta!) >= nodeborder {
+                world.position.y = nodeborder;
             } else if (world.position.y - delta!) <= 0 {
                 world.position.y = 0;
             }

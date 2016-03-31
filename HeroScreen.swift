@@ -91,7 +91,7 @@ class HeroScreen: SKScene {
                 }
             } else if startbut.containsPoint(start){
                 
-                let transition:SKTransition = SKTransition.fadeWithDuration(1)
+                let transition:SKTransition = SKTransition.fadeWithDuration(0.5)
                 let scene:SKScene = GameScreen(size: CGSizeMake(1080, 1920), set: touched)
                 scene.scaleMode = .AspectFill
                 self.view?.presentScene(scene, transition: transition)

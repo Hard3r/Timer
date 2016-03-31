@@ -54,9 +54,11 @@ class Commons: SKSpriteNode {
     
     func initchild() {
         
+        let sk = SKSpriteNode(imageNamed: "Tidehunter");
+        
         //Icon image
         icon = SKSpriteNode(imageNamed: iconID);
-        icon.size = CGSizeMake(icon.frame.width * 2, self.frame.height);
+        icon.size = CGSizeMake(sk.frame.width, sk.frame.height);
         icon.anchorPoint = CGPointMake(0, 0);
         icon.position = CGPointMake(0, 0);
         icon.name = "commonIcon";
@@ -69,9 +71,9 @@ class Commons: SKSpriteNode {
         labelframe.name = "commonLabelframe";
         label = SKLabelNode(text: "\(0)");
         label.name = "commonTimer";
-        label.fontSize = 50;
+        label.fontSize = 100;
         label.fontColor = UIColor.whiteColor();
-        label.fontName = "AlNile-Bold";
+        label.fontName = "Optima-ExtraBlack";
         label.position = CGPointMake(labelframe.frame.width / 2, labelframe.frame.height / 2 - label.frame.height / 2);
         labelframe.addChild(label);
         self.addChild(labelframe);
@@ -81,6 +83,7 @@ class Commons: SKSpriteNode {
         start.size = CGSizeMake((self.frame.width - icon.frame.width) / 3, icon.frame.height);
         start.position = CGPointMake(labelframe.position.x + labelframe.frame.width + start.frame.width / 2, start.frame.height / 2);
         start.anchorPoint = CGPointMake(0.5, 0.5);
+        start.texture = SKTexture(imageNamed: "Start");
         start.name = "commonStart";
         self.addChild(start);
         
@@ -90,6 +93,7 @@ class Commons: SKSpriteNode {
         reset.position = CGPointMake(labelframe.position.x + labelframe.frame.width + start.frame.width, 0);
         reset.anchorPoint = CGPointMake(0, 0);
         reset.name = "commonReset";
+        reset.texture = SKTexture(imageNamed: "Reset");
         self.addChild(reset);
         
             }
