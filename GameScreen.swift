@@ -26,6 +26,7 @@ class GameScreen: SKScene {
     var herocount: Int = 0;
     var count: SKLabelNode!
     
+    var heroscreensize: CGSize!;
     
     var Heroes: Set<Hero> = [];
     var Common: Set<Commons> = [];
@@ -62,9 +63,10 @@ class GameScreen: SKScene {
     }
     
     //Init with size and set of selected heroes Set<String>
-    init(size: CGSize, set: Set<String>) {
+    init(size: CGSize, set: Set<String>, heroscreensize: CGSize) {
         super.init(size: size);
         self.selectedheroes = set;
+        self.heroscreensize = heroscreensize;
         
     }
 
@@ -380,8 +382,15 @@ class GameScreen: SKScene {
             let location = touch.locationInNode(self);
             let nodee = self.nodeAtPoint(location);
             let name: String = nodee.name!;
-            //let locationbuttons = touch.locationInNode(RoundedRect)
 
+            if nodee.name! == "Back" {
+                let transition:SKTransition = SKTransition.fadeWithDuration(0.5)
+                let scene:SKScene = HeroScreen(size: heroscreensize);
+                scene.scaleMode = .AspectFill
+                self.view?.presentScene(scene, transition: transition);
+            }
+            
+            
             //iterate commons
             for common in Common {
                 if common.name == nodee.parent?.name! {

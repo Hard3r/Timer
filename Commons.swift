@@ -83,7 +83,7 @@ class Commons: SKSpriteNode {
         start.size = CGSizeMake((self.frame.width - icon.frame.width) / 3, icon.frame.height);
         start.position = CGPointMake(labelframe.position.x + labelframe.frame.width + start.frame.width / 2, start.frame.height / 2);
         start.anchorPoint = CGPointMake(0.5, 0.5);
-        start.texture = SKTexture(imageNamed: "Start");
+        start.texture = SKTexture(imageNamed: "Starttext");
         start.name = "commonStart";
         self.addChild(start);
         
@@ -93,7 +93,7 @@ class Commons: SKSpriteNode {
         reset.position = CGPointMake(labelframe.position.x + labelframe.frame.width + start.frame.width, 0);
         reset.anchorPoint = CGPointMake(0, 0);
         reset.name = "commonReset";
-        reset.texture = SKTexture(imageNamed: "Reset");
+        reset.texture = SKTexture(imageNamed: "ResetText");
         self.addChild(reset);
         
         

@@ -146,7 +146,7 @@ class Hero: SKSpriteNode {
         //Start timer button
         start = SKSpriteNode(imageNamed: "startbutt");
         start.size = CGSizeMake((self.frame.width - icon.frame.width) / 3, icon.frame.height);
-        start.texture = SKTexture(imageNamed: "Start");
+        start.texture = SKTexture(imageNamed: "Starttext");
         start.position = CGPointMake(core.position.x + core.frame.width + start.frame.width / 2, icon.frame.height + start.frame.height / 2);
         start.anchorPoint = CGPointMake(0.5, 0.5);
         start.name = "Start";
@@ -154,7 +154,7 @@ class Hero: SKSpriteNode {
         
         //Reset timer button
         reset = SKSpriteNode(imageNamed: "info");
-        reset.texture = SKTexture(imageNamed: "Reset");
+        reset.texture = SKTexture(imageNamed: "ResetText");
         reset.size = CGSizeMake((self.frame.width - icon.frame.width) / 5, icon.frame.height);
         reset.position = CGPointMake(start.position.x + start.frame.width / 2 + reset.frame.width / 2 - 5, icon.frame.height + reset.frame.height / 2);
         reset.anchorPoint = CGPointMake(0.5, 0.5);
@@ -199,21 +199,21 @@ class Hero: SKSpriteNode {
         
         level6 = SKSpriteNode(color: UIColor.whiteColor(), size: CGSizeMake((levelframe.size.width - skill.frame.width) / 3, levelframe.size.height));
         level6.anchorPoint = CGPointMake(0, 0);
-        level6.texture = SKTexture(imageNamed: "Play");
+        level6.texture = SKTexture(imageNamed: "Level6");
         level6.position = CGPointMake(skill.position.x + skill.frame.width, 0);
         level6.name = "Level6";
         self.addChild(level6);
         
         level11 = SKSpriteNode(color: UIColor.redColor(), size: CGSizeMake((levelframe.size.width - skill.frame.width) / 3, levelframe.size.height));
         level11.anchorPoint = CGPointMake(0, 0);
-        level11.texture = SKTexture(imageNamed: "Play");
+        level11.texture = SKTexture(imageNamed: "Level11");
         level11.position = CGPointMake(level6.position.x + level6.frame.width, 0);
         level11.name = "Level11";
         self.addChild(level11);
         
         level16 = SKSpriteNode(color: UIColor.blueColor(), size: CGSizeMake((levelframe.size.width - skill.frame.width) / 3, levelframe.size.height));
         level16.anchorPoint = CGPointMake(0, 0);
-        level16.texture = SKTexture(imageNamed: "Play");
+        level16.texture = SKTexture(imageNamed: "Level16");
         level16.position = CGPointMake(level11.position.x + level11.frame.width, 0);
         level16.name = "Level16";
         self.addChild(level16);

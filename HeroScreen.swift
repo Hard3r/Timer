@@ -12,6 +12,7 @@ class HeroScreen: SKScene {
     
     var mainframe: SKSpriteNode!
     var startbut: SKSpriteNode!
+    var backbut: SKSpriteNode!
     
     let numrows = 7;
     let numcols = 3;
@@ -24,27 +25,33 @@ class HeroScreen: SKScene {
     
     
     override func didMoveToView(view: SKView) {
-        let background2 = SKSpriteNode(imageNamed: "dota2walpapaer");
+        let background2 = SKSpriteNode(imageNamed: "Background");
         background2.position = CGPointMake(0, 0)
+        background2.size = CGSizeMake(self.frame.width, self.frame.height);
         background2.zPosition = 1;
         background2.anchorPoint = CGPointMake(0, 0)
-        background2.setScale(0.8)
-        //background2.yScale = 1.45
-        //background2.xScale = 1.1
         self.addChild(background2);
         
-        //Фрейм содержащий 3 кнопки
+        //Фрейм содержащий hero кнопки
         mainframe = SKSpriteNode(color: UIColor.whiteColor(), size: CGSizeMake(self.frame.width * 0.45, self.frame.height * 0.8))
         mainframe.position = CGPointMake(self.frame.midX, self.frame.midY * 0.9) //задаем позицию.
         mainframe.zPosition = 2 // задаем  положение нашего объекта относительно оси Z.
         self.addChild(mainframe)
         
         //Start button
-        startbut = SKSpriteNode(imageNamed: "startbutt")
-        startbut.position = CGPointMake(mainframe.frame.maxX - startbut.frame.width, mainframe.frame.maxY + startbut.frame.size.height / 2)
-         startbut.anchorPoint = CGPointMake(0, 0.5)
+        startbut = SKSpriteNode(imageNamed: "PlayText")
+        startbut.position = CGPointMake(mainframe.frame.maxX - startbut.frame.width, mainframe.frame.maxY + startbut.frame.size.height / 2 + 20)
+        startbut.anchorPoint = CGPointMake(0, 0.5)
         startbut.zPosition = 3;
         self.addChild(startbut)
+        
+        //Back button
+        backbut = SKSpriteNode(imageNamed: "PlayBack");
+        backbut.position = CGPointMake(mainframe.frame.minX, mainframe.frame.maxY + startbut.frame.size.height / 2 + 20);
+        backbut.size = CGSizeMake(mainframe.frame.width - startbut.frame.width - 5, startbut.frame.height);
+        backbut.anchorPoint = CGPointMake(0, 0.5);
+        backbut.zPosition = 3;
+        self.addChild(backbut)
         
         //расчет размера нодов в соответствии с количеством колонок и строк
         squareSize = CGSizeMake(mainframe.frame.size.width / CGFloat(numcols), mainframe.frame.size.height / CGFloat(numrows))
@@ -92,16 +99,18 @@ class HeroScreen: SKScene {
             } else if startbut.containsPoint(start){
                 
                 let transition:SKTransition = SKTransition.fadeWithDuration(0.5)
-                let scene:SKScene = GameScreen(size: CGSizeMake(1080, 1920), set: touched)
+                let scene:SKScene = GameScreen(size: CGSizeMake(1080, 1920), set: touched, heroscreensize: self.size)
                 scene.scaleMode = .AspectFill
-                self.view?.presentScene(scene, transition: transition)
+                self.view?.presentScene(scene, transition: transition);
                 
+            } else if backbut.containsPoint(start){
+                let transition:SKTransition = SKTransition.fadeWithDuration(0.5)
+                let scene:SKScene = GameScene(size: self.size);
+                scene.scaleMode = .AspectFill
+                self.view?.presentScene(scene, transition: transition);
             }
-            
-        
-            
+        }
     }
-}
     
     
     //func созд спрайта по имени из енума
