@@ -239,12 +239,15 @@ class GameScreen: SKScene {
             let start = touch.locationInNode(self);
             let previousLocation = touch.previousLocationInNode(self);
             delta = start.y - previousLocation.y;
+            world.position.y += -delta!;
+            
             
             //Chek for scrool world up or down
             if start.y > previousLocation.y {
-                scrollup = true;
+                scrollup = false;
+                scrolldown = false;
             } else if start.y < previousLocation.y {
-                scrolldown = true;
+                scrolldown = false;
             }
             
             print("\(start.x)", "\(start.y)");
@@ -257,7 +260,7 @@ class GameScreen: SKScene {
             let name: String = nodee.name!;
             
             //Delta changes if icon or skill node is touched only
-            if name == "Icon" || name == "Skill" {
+            if (name == "Icon" || name == "Skill") && scrolldown {
                 xdelta = start.x - previousLocation.x;
             }
             
@@ -417,15 +420,17 @@ class GameScreen: SKScene {
                     }
                 }
             }
-
         }
     }
+
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         for touch: AnyObject in touches {
             
             //Start Node movement to default position
             started = true;
+            scrolldown = true;
+            
             
             let location = touch.locationInNode(self);
             let nodee = self.nodeAtPoint(location);
@@ -471,19 +476,26 @@ class GameScreen: SKScene {
     
     override func update(currentTime: NSTimeInterval) {
         
+        
+        
             //Update heroes
             for hero in Heroes {
-                hero.update(currentTime);
                 
+                if scrolldown {
+                //Update Heroes
+                hero.update(currentTime);
                 
                 //Movement of node
                 if started {
                 if hero.position.x > (self.frame.width - hero.frame.width) / 2 {
                         hero.position.x -= 5;
-                } else if hero.position.x - 5 <= (self.frame.width - hero.frame.width) / 2 {
-                        hero.position.x = (self.frame.width - hero.frame.width) / 2;
-                    }
                 }
+            }
+                
+                if hero.position.x - 5 <= (self.frame.width - hero.frame.width) / 2 {
+                    hero.position.x = (self.frame.width - hero.frame.width) / 2;
+                }
+        } //scrollup down
                 
                 //Delete node
                 if hero.position.x > self.frame.midX {
@@ -492,6 +504,7 @@ class GameScreen: SKScene {
                     isremoved = true;
                     }
                 }
+        
     
                 //Update commons
                 for common in Common {
@@ -504,58 +517,20 @@ class GameScreen: SKScene {
         if isremoved {
             
             for (hero) in Heroes {
-            hero.position = CGPointMake((self.frame.width - hero.frame.width) / 2, (rune.position.y - rune.frame.height - hero.frame.height / 2 - 20) - (hero.frame.height + 20) * CGFloat(herocount));
+            hero.position = CGPointMake((self.frame.width - hero.frame.width) / 2, (rune.position.y - rune.frame.height - hero.frame.height / 2 - CGFloat(offsetx)) - (hero.frame.height + CGFloat(offsetx)) * CGFloat(herocount));
                 herocount++;
             }
             isremoved = false;
         }
-      
-        /*
-   if (olddelta != delta) {
-    
-    world.physicsBody?.dynamic = true;
-    world.physicsBody?.applyImpulse(CGVectorMake(0, delta! + 10000));
-    started = true;
-   }
-    
-        olddelta = delta;
-
-        
-        if started && scrollup {
-            world.physicsBody?.velocity = CGVectorMake(0, CGFloat(counts));
-            counts--;
-        }
-        
-       if started && scrolldown {
-            world.physicsBody?.velocity = CGVectorMake(0, CGFloat(counte));
-            counte++;
-        }
-        
-        if counts < 0 {
-            world.physicsBody?.dynamic = false;
-            counts = 500;
-            started = false;
-            scrollup = false;
-        }
-        
-        else if counte > 0 {
-            world.physicsBody?.dynamic = false;
-            counte = -500;
-            started = false;
-            scrolldown = false;
-        }
-*/
        
-        //Update camera (scroll)
-        if (olddelta != delta) {
-            world.position.y += -delta!;
-            if (world.position.y - delta!) >= nodeborder {
-                world.position.y = nodeborder;
+     
+            if (world.position.y - delta!) >= 1920 {
+                world.position.y = 1920;
             } else if (world.position.y - delta!) <= 0 {
                 world.position.y = 0;
             }
             olddelta = delta;
-    }
+ 
 }
     
     func commontimer(name: String, previousnode: SKSpriteNode, highborder: Double, highestborder: Double) -> Commons {
