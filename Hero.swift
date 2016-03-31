@@ -151,6 +151,7 @@ class Hero: SKSpriteNode {
         start.anchorPoint = CGPointMake(0.5, 0.5);
         start.name = "Start";
         
+        
         //Reset timer button
         reset = SKSpriteNode(imageNamed: "info");
         reset.texture = SKTexture(imageNamed: "Reset");
@@ -225,6 +226,7 @@ class Hero: SKSpriteNode {
         readyspell.zPosition = 10;
         readyspell.alpha = 0;
         skill.addChild(readyspell);
+       
     }
    
     var dobl: Double = 1

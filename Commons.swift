@@ -96,6 +96,7 @@ class Commons: SKSpriteNode {
         reset.texture = SKTexture(imageNamed: "Reset");
         self.addChild(reset);
         
+        
             }
     
     func update() {
