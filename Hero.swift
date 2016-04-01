@@ -8,6 +8,7 @@
 
 import Foundation
 import SpriteKit
+import AVFoundation
 
 class Hero: SKSpriteNode {
     
@@ -72,7 +73,8 @@ class Hero: SKSpriteNode {
     
     var timer = NSTimer()
     
-    
+    //Audio player
+    var player:AVAudioPlayer = AVAudioPlayer()
     
     init() {
     super.init(texture: nil, color: UIColor.clearColor(), size: CGSizeMake(0, 0))
@@ -270,12 +272,12 @@ class Hero: SKSpriteNode {
         
        //Check cooldowns to end, whet timer reach 10 sec call method wih sound
         if soundTEN {
-            if lvl6 < 2 || lvl6agha < 2 {
-                soundTEN("10 SECONDS");
-            } else if lvl11 < 2 || lvl11agha < 2 {
-                soundTEN("10 SECONDS");
-            } else if lvl16 < 2 || lvl16agha < 2 {
-                soundTEN("10 SECONDS");
+            if lvl6 < 11 || lvl6agha < 11 {
+                soundTEN("sound_\(iconID)");
+            } else if lvl11 < 11 || lvl11agha < 11 {
+                soundTEN("sound_\(iconID)");
+            } else if lvl16 < 11 || lvl16agha < 11 {
+                soundTEN("sound_\(iconID)");
             }
         } else if soundZERO {
             if lvl6 < 0 || lvl6agha < 0 {
@@ -430,13 +432,24 @@ class Hero: SKSpriteNode {
     //Test func to play sound when timer reach 10 sec
     func soundTEN(soundname: String) {
         //add sound
+        
+        //Path to sound
+        let audioPath = NSBundle.mainBundle().pathForResource(soundname, ofType: "mp3");
+        
+        do {
+            player = try AVAudioPlayer(contentsOfURL: NSURL(fileURLWithPath: audioPath!));
+            
+        } catch {
+            print("file not found or smthing");
+        }
+        
+        player.play();
         print(soundname);
         soundTEN = false;
     }
     
     //Test func to play sound when timer reach 0 sec
     func soundZERO(soundname: String) {
-        //add sound
         print(soundname);
         
         timer.invalidate();

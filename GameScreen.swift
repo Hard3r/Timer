@@ -15,7 +15,6 @@ class GameScreen: SKScene {
     var label: SKLabelNode!
     var selectedheroes: Set<String>!
     var cam: SKCameraNode = SKCameraNode()
-    //var test:CGFloat = 0;
     var delta:CGFloat? = 0;
     var xdelta: CGFloat = 0;
     var olddelta:CGFloat? = 0;
@@ -50,7 +49,7 @@ class GameScreen: SKScene {
     var started: Bool = true;
     var isremoved: Bool = false;
     var scrollup: Bool = false;
-    var scrolldown: Bool = false;
+    var scrolldown: Bool = true;
     
     let icon = SKSpriteNode(imageNamed: "Tidehunter");
     var oldpos: CGFloat!;
@@ -83,12 +82,11 @@ class GameScreen: SKScene {
             print(test);
         }
         
-        backgroundColor = SKColor.whiteColor();
+        backgroundColor = SKColor.blackColor();
         self.name = "Main";
 
         //Add camera
         self.camera = cam;
-        //cam.setScale(3);
         cam.position = CGPointMake(self.frame.width / 2, self.frame.height / 2);
         
         //Coords for test
@@ -141,9 +139,9 @@ class GameScreen: SKScene {
         nodeborder = nodeborder + start.frame.height + 100;
         
         //Add roshan timer
-        let roshan = Commons(texture: nil, color: UIColor.clearColor(), size: CGSizeMake(self.frame.width * 0.98 , 150), iconId: "roshan", cooldown: 0.0, highborder: 470.0, highestborder: 480.0);
+        let roshan = Commons(texture: nil, color: UIColor.clearColor(), size: CGSizeMake(self.frame.width * 0.98 , 150), iconId: "Roshan", cooldown: 0.0, highborder: 470.0, highestborder: 480.0);
         roshan.position = CGPointMake(self.frame.midX - roshan.frame.width / 2, start.position.y - start.frame.height - roshan.frame.height / 2 - 100); // задаем позицию.
-        roshan.name = "roshan";
+        roshan.name = "Roshan";
         roshan.anchorPoint = CGPointMake(0, 0);
         roshan.zPosition = 1;
         Common.insert(roshan);
@@ -159,13 +157,13 @@ class GameScreen: SKScene {
         roshan.addChild(roshanlabel);
         
         //Add neutral timer
-        let centaur = commontimer("centaur", previousnode: roshan, highborder: 40.0, highestborder: 60);
+        let centaur = commontimer("Neutrals", previousnode: roshan, highborder: 40.0, highestborder: 60);
         centaur.zPosition = 1;
         Common.insert(centaur);
         world.addChild(centaur);
         
         //Add rune timer
-        rune = commontimer("rune", previousnode: centaur, highborder: 110.0, highestborder: 120.0);
+        rune = commontimer("Rune", previousnode: centaur, highborder: 110.0, highestborder: 120.0);
         rune.zPosition = 1;
         Common.insert(rune);
         world.addChild(rune);

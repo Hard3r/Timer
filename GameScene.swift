@@ -24,21 +24,20 @@ class GameScene: SKScene {
         
         self.backgroundColor = SKColor.whiteColor();
         
-      //  let background2 = SKSpriteNode(imageNamed: "dota2walpapaer");
         let background2 = SKSpriteNode(imageNamed: "Background");
         background2.size = CGSizeMake(self.frame.width, self.frame.height);
-        background2.position = CGPointMake(0, 0)
+        background2.position = CGPointMake(0, 0);
         background2.zPosition = 1;
-        background2.anchorPoint = CGPointMake(0, 0)
+        background2.anchorPoint = CGPointMake(0, 0);
 
         self.addChild(background2);
         
         
         //Parent frame for buttons
-        mainbutt = SKSpriteNode(imageNamed: "buttonframe")
+        mainbutt = SKSpriteNode(color: UIColor.clearColor(), size: CGSizeMake(100, 100));
         mainbutt.zPosition = 0;
-        mainbutt.position = CGPointMake(self.frame.midX, self.frame.midY)
-        self.addChild(mainbutt)
+        mainbutt.position = CGPointMake(self.frame.midX, self.frame.midY);
+        self.addChild(mainbutt);
         
         
         
@@ -47,23 +46,15 @@ class GameScene: SKScene {
         startbut.zPosition = 2;
         mainbutt.addChild(startbut)
         
-        //Settings button
-        settbut = SKSpriteNode(imageNamed: "settings.png")
-        settbut.position = CGPointMake(70, -150)
-        settbut.name = "SettignsButton"
-        let action = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
-        settbut.runAction(SKAction.repeatActionForever(action))
-        settbut.setScale(0.1)
-        settbut.zPosition = 2;
-        //mainbutt.addChild(settbut)
+      
         
         //Infobutton
-        infobut = SKSpriteNode(imageNamed: "question")
-        infobut.position = CGPointMake(-70, -150)
-        infobut.name = "Info"
+        infobut = SKSpriteNode(imageNamed: "question");
+        infobut.position = CGPointMake(-70, -150);
+        infobut.name = "Info";
         infobut.setScale(0.2);
         infobut.zPosition = 2;
-        mainbutt.addChild(infobut)
+        mainbutt.addChild(infobut);
         
         //Infolabel
         infolabel = SKLabelNode();
@@ -82,22 +73,18 @@ class GameScene: SKScene {
 
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         for touch: AnyObject in touches {
-           // let location = touch.locationInNode(self)
-            let locationbuttons = touch.locationInNode(mainbutt)
+            let locationbuttons = touch.locationInNode(mainbutt);
             
             if startbut.containsPoint(locationbuttons) {
-                print("tapped! + Start")
+                print("tapped! + Start");
                 
                 
-                let transition:SKTransition = SKTransition.fadeWithDuration(1)
-                let scene:SKScene = HeroScreen(size: self.size)
-                scene.scaleMode = .AspectFill
-                self.view?.presentScene(scene, transition: transition)
+                let transition:SKTransition = SKTransition.fadeWithDuration(1);
+                let scene:SKScene = HeroScreen(size: self.size);
+                scene.scaleMode = .AspectFill;
+                self.view?.presentScene(scene, transition: transition);
                 
-            } else if settbut.containsPoint(locationbuttons) {
-                print("tapped! + Settings")
-                startbut.alpha = 1;
-            } else if infobut.containsPoint(locationbuttons) {
+            }  else if infobut.containsPoint(locationbuttons) {
                 print("tapped! + Info")
                 
                 if infolabel.alpha == 1 {

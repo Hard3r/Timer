@@ -8,6 +8,7 @@
 
 import Foundation
 import SpriteKit
+import AVFoundation
 
 
 class Commons: SKSpriteNode {
@@ -18,6 +19,7 @@ class Commons: SKSpriteNode {
     var cooldownsave: Double = 0;
     var highborder: Double = 0;
     var highestborder: Double = 0;
+    
     
     //Icon, timer, buttons
     var icon: SKSpriteNode!;
@@ -32,6 +34,9 @@ class Commons: SKSpriteNode {
     var soundZERO: Bool = true;
     
     var timer = NSTimer();
+        
+    //Audio player
+    var player:AVAudioPlayer = AVAudioPlayer()
     
     //Init methods
     init() {
@@ -108,10 +113,23 @@ class Commons: SKSpriteNode {
         //Reset timer.  plays sound before 10 sec and enables zero check. 
         //then triggers zero, reset seconds and turn on 10 sec countdown
         if soundTEN && cooldown > highborder {
+            //Path to sound
+            let soundname: String = "sound_" + iconID;
+            let audioPath = NSBundle.mainBundle().pathForResource(soundname, ofType: "mp3");
+            
+            do {
+                player = try AVAudioPlayer(contentsOfURL: NSURL(fileURLWithPath: audioPath!));
+                
+            } catch {
+                print("file not found or smthing");
+            }
+            
+            player.play();
+
             print("PLAY 10 SEC SOUND");
             soundTEN = false;
             soundZERO = true;
-        } else if soundZERO && cooldown == highestborder + 1 {
+        } else if soundZERO && cooldown == highestborder {
             print("ZERO SECON MY FRIEND");
             cooldown = cooldownsave;
             soundTEN = true;
