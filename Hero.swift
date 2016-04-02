@@ -146,16 +146,16 @@ class Hero: SKSpriteNode {
         core.position = CGPointMake(scepter.position.x + scepter.frame.width, icon.frame.height);
         
         //Start timer button
-        start = SKSpriteNode(imageNamed: "startbutt");
+        start = SKSpriteNode(imageNamed: "Starttext");
         start.size = CGSizeMake((self.frame.width - icon.frame.width) / 3, icon.frame.height);
-        start.texture = SKTexture(imageNamed: "Starttext");
+        //start.texture = SKTexture(imageNamed: "Starttext");
         start.position = CGPointMake(core.position.x + core.frame.width + start.frame.width / 2, icon.frame.height + start.frame.height / 2);
         start.anchorPoint = CGPointMake(0.5, 0.5);
         start.name = "Start";
         
         
         //Reset timer button
-        reset = SKSpriteNode(imageNamed: "info");
+        reset = SKSpriteNode(imageNamed: "ResetText");
         reset.texture = SKTexture(imageNamed: "ResetText");
         reset.size = CGSizeMake((self.frame.width - icon.frame.width) / 5, icon.frame.height);
         reset.position = CGPointMake(start.position.x + start.frame.width / 2 + reset.frame.width / 2 - 5, icon.frame.height + reset.frame.height / 2);

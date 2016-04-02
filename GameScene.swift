@@ -16,22 +16,29 @@ class GameScene: SKScene {
     var infobut: SKNode! = nil;
     var Second: SKLabelNode! = nil;
     var infolabel: SKLabelNode!;
-
-    var count: Double! = 0;
+    var help: SKSpriteNode!;
+    var close: SKSpriteNode!;
     
+    var count: Double! = 0;
     
     override func didMoveToView(view: SKView) {
         
-        self.backgroundColor = SKColor.whiteColor();
+        self.backgroundColor = SKColor.grayColor();
         
         let background2 = SKSpriteNode(imageNamed: "Background");
-        background2.size = CGSizeMake(self.frame.width, self.frame.height);
-        background2.position = CGPointMake(0, 0);
+        background2.size = CGSizeMake(self.frame.width / 2 + 100, self.frame.height);
+        background2.position = CGPointMake(self.frame.midX, self.frame.midY);
         background2.zPosition = 1;
-        background2.anchorPoint = CGPointMake(0, 0);
-
+        background2.anchorPoint = CGPointMake(0.5, 0.5);
         self.addChild(background2);
         
+        help = SKSpriteNode(imageNamed: "Helpscreen");
+        help.position = CGPointMake(background2.frame.midX, background2.frame.midY);
+        help.size = CGSizeMake(background2.size.width * 0.9, background2.size.height);
+        help.zPosition = 10;
+        help.name = "Help";
+        help.alpha = 0;
+        self.addChild(help);
         
         //Parent frame for buttons
         mainbutt = SKSpriteNode(color: UIColor.clearColor(), size: CGSizeMake(100, 100));
@@ -50,9 +57,9 @@ class GameScene: SKScene {
         
         //Infobutton
         infobut = SKSpriteNode(imageNamed: "question");
-        infobut.position = CGPointMake(-70, -150);
+        infobut.position = CGPointMake(0, -150);
         infobut.name = "Info";
-        infobut.setScale(0.2);
+        infobut.setScale(0.1);
         infobut.zPosition = 2;
         mainbutt.addChild(infobut);
         
@@ -65,7 +72,7 @@ class GameScene: SKScene {
         infolabel.position = CGPointMake(mainbutt.frame.midX, mainbutt.frame.midY + mainbutt.frame.height);
         infolabel.zPosition = 10;
         infolabel.alpha = 0;
-        self.addChild(infolabel);
+        //self.addChild(infolabel);
         
     }
     
@@ -74,6 +81,8 @@ class GameScene: SKScene {
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         for touch: AnyObject in touches {
             let locationbuttons = touch.locationInNode(mainbutt);
+            let location = touch.locationInNode(self);
+
             
             if startbut.containsPoint(locationbuttons) {
                 print("tapped! + Start");
@@ -86,14 +95,9 @@ class GameScene: SKScene {
                 
             }  else if infobut.containsPoint(locationbuttons) {
                 print("tapped! + Info")
-                
-                if infolabel.alpha == 1 {
-                    infolabel.alpha = 0;
-                } else {
-                    infolabel.alpha = 1;
-                }
-
-            }
+                help.alpha = 1;
+            }  else if help.containsPoint(location) {
+                help.alpha = 0;            }
         }
     }
         

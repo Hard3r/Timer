@@ -84,7 +84,7 @@ class Commons: SKSpriteNode {
         self.addChild(labelframe);
         
         //Start button
-        start = SKSpriteNode(imageNamed: "startbutt");
+        start = SKSpriteNode(imageNamed: "Starttext");
         start.size = CGSizeMake((self.frame.width - icon.frame.width) / 3, icon.frame.height);
         start.position = CGPointMake(labelframe.position.x + labelframe.frame.width + start.frame.width / 2, start.frame.height / 2);
         start.anchorPoint = CGPointMake(0.5, 0.5);
@@ -140,7 +140,7 @@ class Commons: SKSpriteNode {
     func startTimer(){
         
         //Add a timer
-            timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "countdown", userInfo: nil, repeats: true)
+            timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(Commons.countdown), userInfo: nil, repeats: true)
         
     }
     

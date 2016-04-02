@@ -246,6 +246,9 @@ class GameScreen: SKScene {
         } else {
             nodeborder = nodeborder - world.frame.height / 2;
         }
+        
+        NSNotificationCenter.defaultCenter().postNotificationName("showBanner", object: nil);
+
     }
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -566,8 +569,8 @@ class GameScreen: SKScene {
         }
        
      
-            if (world.position.y - delta!) >= nodeborder {
-                world.position.y = nodeborder;
+            if (world.position.y - delta!) >= nodeborder + 200 {
+                world.position.y = nodeborder + 200;
             } else if (world.position.y - delta!) <= 0 {
                 world.position.y = 0;
             }

@@ -8,13 +8,28 @@
 
 import UIKit
 import SpriteKit
+import GoogleMobileAds
 
-class GameViewController: UIViewController {
+
+
+
+class GameViewController: UIViewController, GADBannerViewDelegate {
     
     var bool: Bool = false;
+    var bannerView: GADBannerView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        let screenRect = UIScreen.mainScreen().bounds
+        
+        self.bannerView = GADBannerView.init(adSize: kGADAdSizeSmartBannerPortrait)
+        self.bannerView.hidden = true
+        self.bannerView.adUnitID = "ca-app-pub-4528141921612904/2623911271"
+        self.bannerView.rootViewController = self
+        bannerView!.frame.origin.x = 0;
+        bannerView!.frame.origin.y = screenRect.size.height - bannerView.frame.height;
+
+        self.view.addSubview(self.bannerView)
 
         if let scene = GameScene(fileNamed:"GameScene") {
             // Configure the view.
@@ -30,6 +45,11 @@ class GameViewController: UIViewController {
             
             skView.presentScene(scene)
         }
+        
+        //iAd banner
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(GameViewController.showBanner), name: "showBanner", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(GameViewController.hideBanner), name: "hideBanner", object: nil)
+      
     }
 
     override func shouldAutorotate() -> Bool {
@@ -53,7 +73,18 @@ class GameViewController: UIViewController {
         return true
     }
     
-    func shit() {
-        print("SHIT");
+    func showBanner() {
+        self.bannerView.hidden = false
+        let request = GADRequest()
+        request.testDevices = ["2077ef9a63d2b398840261c8221a0c9b"]
+        self.bannerView.loadRequest(request)
     }
+    
+    func hideBanner() {
+        self.bannerView.hidden = true
+    }
+    
+    func bannerView(banner: GADBannerView!, didFailToReceiveAdWithError error: NSError!) {
+        self.bannerView.hidden = true    }
+
 }
